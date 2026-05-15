@@ -225,63 +225,55 @@
                 </div>
             </div>
             
-            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
-                <button onclick="closeModal('modal-nueva-spr')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
-                <button onclick="guardarSPR()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">Guardar SPR</button>
+        <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 my-8 flex flex-col max-h-[90vh]">
+                <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl">
+                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega</h3>
+                    <button onclick="closeModal('modal-nuevo-remito')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <div class="p-6 overflow-y-auto flex-grow">
+                    <input type="hidden" id="remito-oc-id">
+                    <div class="mb-6 bg-slate-100 p-3 rounded-lg flex items-center">
+                        <i class="fa-solid fa-info-circle text-green-500 mr-2"></i>
+                        <span class="text-sm text-slate-700">Entregando para OC: <strong id="remito-oc-numero" class="text-slate-900"></strong></span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Nro. de Remito *</label>
+                            <input type="text" id="remito-numero" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none" placeholder="0001-00001234">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de Entrega *</label>
+                            <input type="date" id="remito-fecha" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Vinculado a SPR (Opcional)</label>
+                            <select id="remito-spr-vinculada" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none bg-white">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Producto</th>
+                                    <th class="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Falta Entregar</th>
+                                    <th class="px-4 py-2 text-right text-xs font-medium text-slate-800 uppercase">Cant. Entregada</th>
+                                </tr>
+                            </thead>
+                            <tbody id="remito-productos-lista" class="bg-white divide-y divide-slate-200">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
+                    <button onclick="closeModal('modal-nuevo-remito')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
+                    <button onclick="guardarRemito()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm">Guardar Entrega</button>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- MODAL NUEVO REMITO -->
-    <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 my-8 flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl">
-                <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega</h3>
-                <button onclick="closeModal('modal-nuevo-remito')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="p-6 overflow-y-auto flex-grow">
-                <input type="hidden" id="remito-oc-id">
-                <div class="mb-6 bg-slate-100 p-3 rounded-lg flex items-center">
-                    <i class="fa-solid fa-info-circle text-green-500 mr-2"></i>
-                    <span class="text-sm text-slate-700">Entregando para OC: <strong id="remito-oc-numero" class="text-slate-900"></strong></span>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nro. de Remito *</label>
-                        <input type="text" id="remito-numero" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none" placeholder="0001-00001234">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de Entrega *</label>
-                        <input type="date" id="remito-fecha" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Vinculado a SPR (Opcional)</label>
-                        <select id="remito-spr-vinculada" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none bg-white">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="border border-slate-200 rounded-lg overflow-hidden">
-                    <table class="min-w-full divide-y divide-slate-200">
-                        <thead class="bg-slate-50">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Producto</th>
-                                <th class="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Falta Entregar</th>
-                                <th class="px-4 py-2 text-right text-xs font-medium text-slate-800 uppercase">Cant. Entregada</th>
-                            </tr>
-                        </thead>
-                        <tbody id="remito-productos-lista" class="bg-white divide-y divide-slate-200">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
-                <button onclick="closeModal('modal-nuevo-remito')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
-                <button onclick="guardarRemito()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm">Guardar Entrega</button>
-            </div>
-        </div>
-    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -346,29 +338,39 @@
         });
 
         // ==========================================
-        // AUTENTICACIÓN
+        // AUTENTICACIÓN / INICIALIZACIÓN
         // ==========================================
         async function initAuth() {
             try {
-                // Logueo anónimo (ya que no proveíste sistema de login con mail)
-                // Esto generará un ID de usuario único para esta máquina.
+                // Intenta el inicio de sesión anónimo primero
                 await signInAnonymously(auth);
-                
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        currentUser = user;
-                        document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-user-check text-green-400 mr-1"></i> Conectado a DB`;
-                        cargarOrdenes();
-                    }
-                });
-
-                agregarFilaProductoOC();
-                document.getElementById('spr-fecha').valueAsDate = new Date();
-                document.getElementById('remito-fecha').valueAsDate = new Date();
             } catch (error) {
-                console.error("Error Auth:", error);
-                document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-400 mr-1"></i> Error DB`;
+                console.error("Fallo al iniciar sesión anónimamente:", error);
+                document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> Sin Auth`;
+                showToast("No se pudo autenticar. Usando ID local (Modo Abierto).", "warning");
+
+                // Fallback: Si falla (por ej, no está habilitado en Firebase), usa un ID local
+                let localUid = localStorage.getItem('erp_local_uid');
+                if (!localUid) {
+                    localUid = 'user_' + generateId();
+                    localStorage.setItem('erp_local_uid', localUid);
+                }
+                currentUser = { uid: localUid };
+                cargarOrdenes();
             }
+
+            // Escuchar cambios de autenticación
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-database text-green-400 mr-1"></i> Conectado a DB (Anónimo)`;
+                    cargarOrdenes();
+                }
+            });
+
+            agregarFilaProductoOC();
+            document.getElementById('spr-fecha').valueAsDate = new Date();
+            document.getElementById('remito-fecha').valueAsDate = new Date();
         }
 
         function showToast(message, type = 'success') {
