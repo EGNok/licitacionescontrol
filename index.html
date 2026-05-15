@@ -225,55 +225,63 @@
                 </div>
             </div>
             
-        <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-            <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 my-8 flex flex-col max-h-[90vh]">
-                <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl">
-                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega</h3>
-                    <button onclick="closeModal('modal-nuevo-remito')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="p-6 overflow-y-auto flex-grow">
-                    <input type="hidden" id="remito-oc-id">
-                    <div class="mb-6 bg-slate-100 p-3 rounded-lg flex items-center">
-                        <i class="fa-solid fa-info-circle text-green-500 mr-2"></i>
-                        <span class="text-sm text-slate-700">Entregando para OC: <strong id="remito-oc-numero" class="text-slate-900"></strong></span>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nro. de Remito *</label>
-                            <input type="text" id="remito-numero" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none" placeholder="0001-00001234">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de Entrega *</label>
-                            <input type="date" id="remito-fecha" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Vinculado a SPR (Opcional)</label>
-                            <select id="remito-spr-vinculada" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none bg-white">
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="border border-slate-200 rounded-lg overflow-hidden">
-                        <table class="min-w-full divide-y divide-slate-200">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Producto</th>
-                                    <th class="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Falta Entregar</th>
-                                    <th class="px-4 py-2 text-right text-xs font-medium text-slate-800 uppercase">Cant. Entregada</th>
-                                </tr>
-                            </thead>
-                            <tbody id="remito-productos-lista" class="bg-white divide-y divide-slate-200">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
-                    <button onclick="closeModal('modal-nuevo-remito')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
-                    <button onclick="guardarRemito()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm">Guardar Entrega</button>
-                </div>
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
+                <button onclick="closeModal('modal-nueva-spr')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
+                <button onclick="guardarSPR()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">Guardar SPR</button>
             </div>
         </div>
+    </div>
+
+    <!-- MODAL NUEVO REMITO -->
+    <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 my-8 flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl">
+                <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega</h3>
+                <button onclick="closeModal('modal-nuevo-remito')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow">
+                <input type="hidden" id="remito-oc-id">
+                <div class="mb-6 bg-slate-100 p-3 rounded-lg flex items-center">
+                    <i class="fa-solid fa-info-circle text-green-500 mr-2"></i>
+                    <span class="text-sm text-slate-700">Entregando para OC: <strong id="remito-oc-numero" class="text-slate-900"></strong></span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nro. de Remito *</label>
+                        <input type="text" id="remito-numero" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none" placeholder="0001-00001234">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de Entrega *</label>
+                        <input type="date" id="remito-fecha" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Vinculado a SPR (Opcional)</label>
+                        <select id="remito-spr-vinculada" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none bg-white">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 rounded-lg overflow-hidden">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Producto</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Falta Entregar</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-slate-800 uppercase">Cant. Entregada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="remito-productos-lista" class="bg-white divide-y divide-slate-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
+                <button onclick="closeModal('modal-nuevo-remito')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
+                <button onclick="guardarRemito()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm">Guardar Entrega</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -300,7 +308,7 @@
         let ordenesData = []; 
         let editandoSPRId = null;
         let editandoRemitoId = null;
-        let unsubscribeOCs = null; // Para limpiar el listener de DB
+        let unsubscribeOCs = null; 
         
         // Exponer funciones al window
         window.openModal = openModal;
@@ -342,14 +350,12 @@
         // ==========================================
         async function initAuth() {
             try {
-                // Intenta el inicio de sesión anónimo primero
                 await signInAnonymously(auth);
             } catch (error) {
                 console.error("Fallo al iniciar sesión anónimamente:", error);
                 document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> Sin Auth`;
                 showToast("No se pudo autenticar. Usando ID local (Modo Abierto).", "warning");
 
-                // Fallback: Si falla (por ej, no está habilitado en Firebase), usa un ID local
                 let localUid = localStorage.getItem('erp_local_uid');
                 if (!localUid) {
                     localUid = 'user_' + generateId();
@@ -359,7 +365,6 @@
                 cargarOrdenes();
             }
 
-            // Escuchar cambios de autenticación
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
@@ -506,7 +511,7 @@
         }
 
         // ==========================================
-        // EXTRACCIÓN PDF -> SPR (AJUSTADA AL FORMATO)
+        // EXTRACCIÓN PDF -> SPR (SÚPER ROBUSTA POR BLOQUES)
         // ==========================================
         async function procesarPDFSPR(event) {
             const file = event.target.files[0];
@@ -546,20 +551,40 @@
             // 2. Extraer Bloques de Productos ("Descripción" ... "Cantidad a comprar" ... "Precio")
             let sprItems = [];
             
-            // El formato de la SPR pone la descripción arriba o separada, pero siempre hay una columna que es "Cantidad a comprar" con el número en formato grande
-            const qtyRegex = /([0-9]{1,6}(?:\.[0-9]{3})*,\d{2,6})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?)/gi;
+            // Intento 1: Separar inteligentemente por el código de ítem estándar de COMPRAR (Ej: 2.1.1-541.137)
+            // Esto divide el PDF en bloques garantizando que la descripción y la cantidad del producto queden juntas
+            let itemBlocks = fullText.split(/(?=\b\d+\.\d+\.\d+-)/);
             
-            let matches = [...fullText.matchAll(qtyRegex)];
+            if (itemBlocks.length > 1) {
+                for (let i = 1; i < itemBlocks.length; i++) {
+                    let block = itemBlocks[i].substring(0, 400); // Tomar los primeros 400 caracteres del renglón para no mezclar con otro producto
+                    
+                    // Buscar la cantidad. En Comprar.gob.ar la cantidad suele ser el primer número grande con decimales antes de la unidad.
+                    let qtyMatch = block.match(/([0-9]{1,6}(?:\.[0-9]{3})*,\d{2,6})\s*(?:UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?|KILO(?:S)?|GRAMO(?:S)?|GR)/i);
+                    
+                    // Si el PDF partió la unidad de medida y la mandó lejos, buscamos solo el número con 6 decimales típicos (ej: 5,000000)
+                    if (!qtyMatch) {
+                        qtyMatch = block.match(/([0-9]{1,6}(?:\.[0-9]{3})*,\d{6})/);
+                    }
+                    
+                    if (qtyMatch) {
+                        let qty = parseFloat(qtyMatch[1].replace(/\./g, '').replace(',', '.'));
+                        sprItems.push({ context: block.toLowerCase(), qty: qty, assigned: false });
+                    }
+                }
+            }
 
-            matches.forEach(match => {
-                let qty = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-
-                // Agarra 300 caracteres antes del número (donde suele estar escondida la descripción)
-                let start = Math.max(0, match.index - 300);
-                let context = fullText.substring(start, match.index).toLowerCase();
-
-                sprItems.push({ context: context, qty: qty, assigned: false });
-            });
+            // Intento 2 (Respaldo): Si no se encontraron códigos 2.1.1- (a veces las SPR cambian), buscar libremente en todo el texto
+            if (sprItems.length === 0) {
+                const qtyRegex = /([0-9]{1,6}(?:\.[0-9]{3})*,\d{2,6})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?|KILO(?:S)?|GRAMO(?:S)?|GR)/gi;
+                let matches = [...fullText.matchAll(qtyRegex)];
+                matches.forEach(match => {
+                    let qty = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                    let start = Math.max(0, match.index - 300);
+                    let context = fullText.substring(start, match.index + 50).toLowerCase();
+                    sprItems.push({ context: context, qty: qty, assigned: false });
+                });
+            }
 
             // 3. Cruce de datos (Fuzzy Match)
             const inputs = document.querySelectorAll('.spr-input-cant');
@@ -569,8 +594,10 @@
                 const tr = input.closest('tr');
                 const prodName = tr.querySelector('td').innerText.toLowerCase();
                 
-                // Dividimos el nombre de la OC en palabras clave
-                let pWords = prodName.match(/[a-z0-9áéíóúñ]{4,}/g) || [];
+                // Dividimos el nombre de la OC en palabras clave de al menos 3 letras (para incluir cosas cortas como PAN, AJO, etc)
+                let pWords = prodName.match(/[a-z0-9áéíóúñ]{3,}/g) || [];
+                const ignoreWords = ['peso', 'argentino', 'unidad', 'dólar', 'ver', 'más', 'mas', 'total', 'con', 'del', 'los', 'las', 'por', 'para', 'tipo'];
+                pWords = pWords.filter(w => !ignoreWords.includes(w));
                 
                 let bestMatch = null;
                 let maxMatches = 0;
@@ -580,9 +607,7 @@
                     let matchesCount = 0;
                     
                     pWords.forEach(w => {
-                        if (!['peso', 'argentino', 'unidad', 'dólar', 'ver', 'más', 'mas', 'total'].includes(w)) {
-                            if (item.context.includes(w)) matchesCount++;
-                        }
+                        if (item.context.includes(w)) matchesCount++;
                     });
                     
                     if(matchesCount > maxMatches) {
@@ -591,7 +616,8 @@
                     }
                 }
                 
-                if(bestMatch && (maxMatches >= 2 || (pWords.length < 3 && maxMatches >= 1))) {
+                // Si encontramos al menos 2 palabras iguales, o 1 si el producto tiene muy pocas palabras
+                if(bestMatch && (maxMatches >= 2 || (pWords.length <= 2 && maxMatches >= 1))) {
                     input.value = bestMatch.qty;
                     bestMatch.assigned = true;
                     input.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); 
@@ -676,8 +702,7 @@
 
             try {
                 const ocId = `OC-${Date.now()}`;
-                // Guardado real en TU firebase
-                const docRef = doc(db, 'ordenes_comprar', ocId); // Colección central
+                const docRef = doc(db, 'ordenes_comprar', ocId); 
                 await setDoc(docRef, { ...nuevaOC, userId: currentUser.uid });
                 
                 showToast("Orden de Compra guardada con éxito."); closeModal('modal-nueva-oc');
@@ -705,15 +730,13 @@
 
         function cargarOrdenes() {
             if (!currentUser) return;
-            if (unsubscribeOCs) unsubscribeOCs(); // Limpiar si ya había uno
+            if (unsubscribeOCs) unsubscribeOCs(); 
 
-            // Conectar a TU colección
             const q = collection(db, 'ordenes_comprar');
             
             unsubscribeOCs = onSnapshot(q, (snapshot) => {
                 ordenesData = []; 
                 snapshot.forEach(doc => { 
-                    // Filtramos localmente para que veas solo las tuyas si en el futuro hay más usuarios
                     if(doc.data().userId === currentUser.uid) {
                         ordenesData.push({ id: doc.id, ...doc.data() }); 
                     }
