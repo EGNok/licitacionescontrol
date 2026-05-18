@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERP Público - Gestión de OC, SPR y Remitos</title>
+    <title>ERP Público - Gestión de OC, SPR, Remitos y Facturas</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +15,7 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { primary: '#2563eb', secondary: '#475569', success: '#16a34a', warning: '#ca8a04', danger: '#dc2626' }
+                    colors: { primary: '#2563eb', secondary: '#475569', success: '#16a34a', warning: '#ca8a04', danger: '#dc2626', purple: '#9333ea' }
                 }
             }
         }
@@ -28,7 +28,7 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
         .accordion-content { transition: max-height 0.3s ease-in-out, padding 0.3s ease; max-height: 0; overflow: hidden; }
-        .accordion-content.open { max-height: 2000px; } 
+        .accordion-content.open { max-height: 2500px; } 
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
@@ -59,18 +59,23 @@
     </nav>
 
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="dashboard-stats">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center">
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="dashboard-stats">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-center">
                 <div class="rounded-full bg-blue-100 p-3 mr-4"><i class="fa-solid fa-file-invoice-dollar text-blue-600 text-xl"></i></div>
-                <div><p class="text-sm text-slate-500 font-medium">Total Adjudicado (OCs)</p><p id="stat-total-oc" class="text-2xl font-bold text-slate-800">$0.00</p></div>
+                <div><p class="text-xs text-slate-500 font-medium">Total Adjudicado (OCs)</p><p id="stat-total-oc" class="text-xl font-bold text-slate-800">$0.00</p></div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-center">
                 <div class="rounded-full bg-green-100 p-3 mr-4"><i class="fa-solid fa-truck-ramp-box text-green-600 text-xl"></i></div>
-                <div><p class="text-sm text-slate-500 font-medium">Total Entregado (Remitos)</p><p id="stat-total-entregado" class="text-2xl font-bold text-green-600">$0.00</p></div>
+                <div><p class="text-xs text-slate-500 font-medium">Entregado (Remitos)</p><p id="stat-total-entregado" class="text-xl font-bold text-green-600">$0.00</p></div>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-center">
                 <div class="rounded-full bg-orange-100 p-3 mr-4"><i class="fa-solid fa-scale-unbalanced text-orange-600 text-xl"></i></div>
-                <div><p class="text-sm text-slate-500 font-medium">Saldo Pendiente a Entregar</p><p id="stat-total-pendiente" class="text-2xl font-bold text-orange-600">$0.00</p></div>
+                <div><p class="text-xs text-slate-500 font-medium">Saldo a Entregar</p><p id="stat-total-pendiente" class="text-xl font-bold text-orange-600">$0.00</p></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-purple-200 p-5 flex items-center ring-1 ring-purple-100 bg-purple-50">
+                <div class="rounded-full bg-purple-200 p-3 mr-4"><i class="fa-solid fa-file-invoice text-purple-700 text-xl"></i></div>
+                <div><p class="text-xs text-purple-600 font-medium">Total Facturado AFIP</p><p id="stat-total-facturado" class="text-xl font-bold text-purple-800">$0.00</p></div>
             </div>
         </div>
 
@@ -92,10 +97,13 @@
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2"></div>
 
+    <!-- ==================== MODALES ==================== -->
+
     <!-- MODAL NUEVA OC -->
-    <div id="modal-nueva-oc" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl mx-4 my-8 flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl">
+    <div id="modal-nueva-oc" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+        <!-- SE AGREGÓ overflow-hidden PARA GARANTIZAR QUE EL BOTÓN QUEDE VISIBLE -->
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-file-contract mr-2 text-blue-600"></i>Cargar Nueva Orden de Compra</h3>
                 <button onclick="closeModal('modal-nueva-oc')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
@@ -105,7 +113,7 @@
                 <div class="lg:w-1/4 flex flex-col space-y-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <h4 class="font-bold text-blue-800 mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Importación Automática</h4>
-                        <p class="text-xs text-blue-600 mb-4">Subí el PDF original de Comprar.gob.ar. El sistema detectará Nro de OC, Proceso y renglones adjudicados.</p>
+                        <p class="text-xs text-blue-600 mb-4">Subí el PDF original de Comprar.gob.ar.</p>
                         
                         <div id="pdf-drop-zone" class="drop-zone rounded-lg p-6 text-center cursor-pointer bg-white" onclick="document.getElementById('oc-pdf-upload').click()">
                             <i class="fa-regular fa-file-pdf text-3xl text-slate-400 mb-2 pointer-events-none"></i>
@@ -128,7 +136,7 @@
                                 <input type="text" id="oc-numero" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Ej: 84/128-1025-OCA26">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1" title="Útil para agrupar ampliaciones de la misma licitación">Nro. Proceso (Licitación) *</label>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Nro. Proceso (Licitación) *</label>
                                 <input type="text" id="oc-proceso" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Ej: 84/128-1000-LPU25">
                             </div>
                             <div>
@@ -139,20 +147,17 @@
 
                         <div class="border border-slate-200 rounded-lg p-4 bg-slate-50">
                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="font-semibold text-slate-700">Productos Adjudicados (Renglones)</h4>
+                                <h4 class="font-semibold text-slate-700">Productos Adjudicados</h4>
                                 <button type="button" onclick="agregarFilaProductoOC()" class="text-sm bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200 transition">
-                                    <i class="fa-solid fa-plus mr-1"></i> Añadir Fila Manual
+                                    <i class="fa-solid fa-plus mr-1"></i> Añadir Fila
                                 </button>
                             </div>
-                            <div id="oc-productos-container" class="space-y-3">
-                                <!-- Filas de productos -->
-                            </div>
+                            <div id="oc-productos-container" class="space-y-3"></div>
                         </div>
                     </form>
                 </div>
             </div>
-            
-            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl shrink-0">
                 <button onclick="closeModal('modal-nueva-oc')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
                 <button onclick="guardarOC()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">Guardar Orden</button>
             </div>
@@ -160,15 +165,14 @@
     </div>
 
     <!-- MODAL NUEVA SPR -->
-    <div id="modal-nueva-spr" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl mx-4 my-8 flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-blue-50 rounded-t-xl">
+    <div id="modal-nueva-spr" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-blue-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800" id="spr-modal-title"><i class="fa-solid fa-file-export mr-2 text-blue-600"></i>Cargar Solicitud de Provisión (SPR)</h3>
                 <button onclick="closeModal('modal-nueva-spr')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
             <div class="p-6 overflow-y-auto flex-grow flex flex-col lg:flex-row gap-6">
-                <!-- Zona Importación SPR -->
                 <div class="lg:w-1/4 flex flex-col space-y-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <h4 class="font-bold text-blue-800 mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Carga Automática</h4>
@@ -181,12 +185,11 @@
                         </div>
                         <div id="pdf-loading-spr" class="hidden text-center py-4">
                             <i class="fa-solid fa-circle-notch fa-spin text-blue-500 mb-2"></i>
-                            <p class="text-xs text-slate-600">Cruzando datos con la OC...</p>
+                            <p class="text-xs text-slate-600">Cruzando datos...</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Formulario SPR -->
                 <div class="lg:w-3/4 border-l border-slate-200 pl-0 lg:pl-6">
                     <input type="hidden" id="spr-oc-id">
                     <div class="mb-6 bg-slate-100 p-3 rounded-lg flex items-center justify-between">
@@ -218,14 +221,12 @@
                                     <th class="px-4 py-2 text-right text-xs font-medium text-slate-800 uppercase">A Pedir en SPR</th>
                                 </tr>
                             </thead>
-                            <tbody id="spr-productos-lista" class="bg-white divide-y divide-slate-200">
-                            </tbody>
+                            <tbody id="spr-productos-lista" class="bg-white divide-y divide-slate-200"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
-            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl shrink-0">
                 <button onclick="closeModal('modal-nueva-spr')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
                 <button onclick="guardarSPR()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">Guardar SPR</button>
             </div>
@@ -233,9 +234,9 @@
     </div>
 
     <!-- MODAL NUEVO REMITO -->
-    <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 my-8 flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl">
+    <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega</h3>
                 <button onclick="closeModal('modal-nuevo-remito')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
@@ -271,17 +272,95 @@
                                 <th class="px-4 py-2 text-right text-xs font-medium text-slate-800 uppercase">Cant. Entregada</th>
                             </tr>
                         </thead>
-                        <tbody id="remito-productos-lista" class="bg-white divide-y divide-slate-200">
-                        </tbody>
+                        <tbody id="remito-productos-lista" class="bg-white divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
             </div>
-            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl">
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl shrink-0">
                 <button onclick="closeModal('modal-nuevo-remito')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
                 <button onclick="guardarRemito()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm">Guardar Entrega</button>
             </div>
         </div>
     </div>
+
+    <!-- MODAL NUEVA FACTURA -->
+    <div id="modal-nueva-factura" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-purple-50 rounded-t-xl shrink-0">
+                <h3 class="text-lg font-bold text-slate-800" id="factura-modal-title"><i class="fa-solid fa-file-invoice text-purple-600 mr-2"></i>Cargar Factura AFIP</h3>
+                <button onclick="closeModal('modal-nueva-factura')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-grow flex flex-col md:flex-row gap-6">
+                <!-- Zona Importación AFIP -->
+                <div class="md:w-1/3 flex flex-col space-y-4">
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h4 class="font-bold text-purple-800 mb-2 text-sm"><i class="fa-solid fa-qrcode mr-2"></i>Lector de AFIP</h4>
+                        <p class="text-xs text-purple-600 mb-4">Arrastrá el PDF de la Factura B/A de AFIP.</p>
+                        
+                        <div id="pdf-drop-zone-factura" class="drop-zone border-purple-300 rounded-lg p-6 text-center cursor-pointer bg-white" onclick="document.getElementById('factura-pdf-upload').click()">
+                            <i class="fa-regular fa-file-pdf text-3xl text-purple-300 mb-2 pointer-events-none"></i>
+                            <p class="text-xs font-medium text-slate-600 pointer-events-none">Arrastrá factura aquí o <span class="text-purple-600">examinar</span></p>
+                            <input type="file" id="factura-pdf-upload" accept="application/pdf" class="hidden" onchange="procesarPDFFactura(event)">
+                        </div>
+                        <div id="pdf-loading-factura" class="hidden text-center py-4">
+                            <i class="fa-solid fa-circle-notch fa-spin text-purple-500 mb-2"></i>
+                            <p class="text-xs text-slate-600">Leyendo comprobante...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario Factura -->
+                <div class="md:w-2/3 border-l border-slate-200 pl-0 md:pl-6">
+                    <input type="hidden" id="factura-oc-id">
+                    <div class="mb-4 bg-slate-100 p-3 rounded-lg flex items-center">
+                        <i class="fa-solid fa-info-circle text-purple-500 mr-2"></i>
+                        <span class="text-sm text-slate-700">Facturando para OC: <strong id="factura-oc-numero" class="text-slate-900"></strong></span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Vincular Factura A:</label>
+                            <select id="factura-vinculo" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 outline-none bg-white text-sm">
+                            </select>
+                            <p class="text-[10px] text-slate-500 mt-1">Podés vincularla de forma general a la OC, o a una SPR / Remito específico.</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Punto de Venta *</label>
+                                <input type="text" id="factura-pv" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Ej: 00001" maxlength="5" onblur="this.value = this.value.padStart(5, '0')">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Comp. Nro *</label>
+                                <input type="text" id="factura-nro" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Ej: 00006918" maxlength="8" onblur="this.value = this.value.padStart(8, '0')">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de Emisión *</label>
+                                <input type="date" id="factura-fecha" required class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Importe Total Facturado ($) *</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 font-bold">$</span>
+                                    <input type="text" id="factura-total" required class="w-full border border-slate-300 rounded-lg pl-8 pr-3 py-2 focus:ring-2 focus:ring-purple-500 outline-none font-semibold text-slate-800" placeholder="Ej: 50000,50" onblur="formatearMoneda(this)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3 bg-slate-50 rounded-b-xl shrink-0">
+                <button onclick="closeModal('modal-nueva-factura')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 transition">Cancelar</button>
+                <button onclick="guardarFactura()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition shadow-sm"><i class="fa-solid fa-save mr-2"></i>Guardar Factura</button>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -308,6 +387,7 @@
         let ordenesData = []; 
         let editandoSPRId = null;
         let editandoRemitoId = null;
+        let editandoFacturaId = null;
         let unsubscribeOCs = null; 
         
         // Exponer funciones al window
@@ -321,54 +401,56 @@
         window.guardarSPR = guardarSPR;
         window.abrirModalRemito = abrirModalRemito;
         window.guardarRemito = guardarRemito;
+        window.abrirModalFactura = abrirModalFactura;
+        window.guardarFactura = guardarFactura;
         window.toggleAccordion = toggleAccordion;
         window.filterOCs = filterOCs;
         window.procesarPDF = procesarPDF;
         window.procesarPDFSPR = procesarPDFSPR;
+        window.procesarPDFFactura = procesarPDFFactura;
         window.limpiarCantidadesSPR = limpiarCantidadesSPR;
         window.getFechaHoraActual = () => new Date().toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
 
-        // Drag and Drop
-        const dropZone = document.getElementById('pdf-drop-zone');
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault(); dropZone.classList.remove('dragover');
-            if (e.dataTransfer.files.length) { document.getElementById('oc-pdf-upload').files = e.dataTransfer.files; procesarPDF({ target: { files: e.dataTransfer.files } }); }
-        });
+        // Función robusta para formatear moneda y prevenir errores al guardar
+        window.formatearMoneda = (input) => {
+            let val = input.value.replace(/[^0-9,\.]/g, '');
+            if (val.includes('.') && !val.includes(',')) val = val.replace('.', ',');
+            let parseableVal = val.replace(/\./g, '').replace(',', '.');
+            
+            if (parseableVal && !isNaN(parseableVal)) {
+                input.value = parseFloat(parseableVal).toFixed(2).replace('.', ',');
+            }
+        };
 
-        const dropZoneSPR = document.getElementById('pdf-drop-zone-spr');
-        dropZoneSPR.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneSPR.classList.add('dragover'); });
-        dropZoneSPR.addEventListener('dragleave', () => { dropZoneSPR.classList.remove('dragover'); });
-        dropZoneSPR.addEventListener('drop', (e) => {
-            e.preventDefault(); dropZoneSPR.classList.remove('dragover');
-            if (e.dataTransfer.files.length) { document.getElementById('spr-pdf-upload').files = e.dataTransfer.files; procesarPDFSPR({ target: { files: e.dataTransfer.files } }); }
-        });
+        // Eventos Drag and Drop
+        const setupDragAndDrop = (zoneId, inputId, processFn) => {
+            const zone = document.getElementById(zoneId);
+            zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+            zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault(); zone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) { document.getElementById(inputId).files = e.dataTransfer.files; processFn({ target: { files: e.dataTransfer.files } }); }
+            });
+        };
+
+        setupDragAndDrop('pdf-drop-zone', 'oc-pdf-upload', procesarPDF);
+        setupDragAndDrop('pdf-drop-zone-spr', 'spr-pdf-upload', procesarPDFSPR);
+        setupDragAndDrop('pdf-drop-zone-factura', 'factura-pdf-upload', procesarPDFFactura);
 
         // ==========================================
         // AUTENTICACIÓN / INICIALIZACIÓN
         // ==========================================
         async function initAuth() {
-            try {
-                await signInAnonymously(auth);
-            } catch (error) {
-                console.error("Fallo al iniciar sesión anónimamente:", error);
-                document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i> Sin Auth`;
-                showToast("No se pudo autenticar. Usando ID local (Modo Abierto).", "warning");
-
+            try { await signInAnonymously(auth); } catch (error) {
                 let localUid = localStorage.getItem('erp_local_uid');
-                if (!localUid) {
-                    localUid = 'user_' + generateId();
-                    localStorage.setItem('erp_local_uid', localUid);
-                }
-                currentUser = { uid: localUid };
-                cargarOrdenes();
+                if (!localUid) { localUid = 'user_' + generateId(); localStorage.setItem('erp_local_uid', localUid); }
+                currentUser = { uid: localUid }; cargarOrdenes();
             }
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
-                    document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-database text-green-400 mr-1"></i> Conectado a DB (Anónimo)`;
+                    document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-database text-green-400 mr-1"></i> Conectado a DB`;
                     cargarOrdenes();
                 }
             });
@@ -376,6 +458,7 @@
             agregarFilaProductoOC();
             document.getElementById('spr-fecha').valueAsDate = new Date();
             document.getElementById('remito-fecha').valueAsDate = new Date();
+            document.getElementById('factura-fecha').valueAsDate = new Date();
         }
 
         function showToast(message, type = 'success') {
@@ -383,18 +466,17 @@
             const toast = document.createElement('div');
             const colors = type === 'success' ? 'bg-green-100 border-green-500 text-green-800' : 
                            type === 'error' ? 'bg-red-100 border-red-500 text-red-800' : 
+                           type === 'warning' ? 'bg-yellow-100 border-yellow-500 text-yellow-800' :
                            'bg-blue-100 border-blue-500 text-blue-800';
             const icon = type === 'success' ? 'fa-check-circle text-green-500' : 
                          type === 'error' ? 'fa-times-circle text-red-500' : 
+                         type === 'warning' ? 'fa-triangle-exclamation text-yellow-600' :
                          'fa-info-circle text-blue-500';
 
             toast.className = `toast-enter flex items-center w-full max-w-sm p-4 border-l-4 rounded shadow-lg ${colors} font-medium text-sm`;
             toast.innerHTML = `<i class="fa-solid ${icon} text-lg mr-3"></i> <span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.replace('toast-enter', 'toast-exit');
-                setTimeout(() => toast.remove(), 300);
-            }, 6000);
+            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 6000);
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
@@ -428,24 +510,79 @@
         }
 
         // ==========================================
-        // EXTRACCIÓN PDF -> ORDEN DE COMPRA
+        // EXTRACCIÓN FACTURA AFIP (NUEVO MOTOR INFALIBLE)
         // ==========================================
-        async function procesarPDF(event) {
+        async function procesarPDFFactura(event) {
             const file = event.target.files[0];
-            if (!file || file.type !== 'application/pdf') return showToast("Por favor selecciona un archivo PDF válido.", "error");
-            document.getElementById('pdf-drop-zone').classList.add('hidden');
-            document.getElementById('pdf-loading').classList.remove('hidden');
+            if (!file || file.type !== 'application/pdf') return showToast("Selecciona un PDF de Factura válido.", "error");
+            document.getElementById('pdf-drop-zone-factura').classList.add('hidden');
+            document.getElementById('pdf-loading-factura').classList.remove('hidden');
 
             try {
                 const arrayBuffer = await file.arrayBuffer();
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 let lines = await extraeLineasPDF(pdf);
-                analizarTextoPDF(lines);
-            } catch (error) { showToast("Hubo un error al leer el archivo PDF.", "error"); } 
+                analizarTextoPDFFactura(lines);
+            } catch (error) { showToast("Error al leer el PDF de la Factura.", "error"); } 
             finally {
+                document.getElementById('pdf-drop-zone-factura').classList.remove('hidden');
+                document.getElementById('pdf-loading-factura').classList.add('hidden');
+                event.target.value = ''; 
+            }
+        }
+
+        function analizarTextoPDFFactura(lines) {
+            const fullText = lines.join(" ");
+
+            let pvMatch = fullText.match(/Punto de Venta:\s*(\d{4,5})/i);
+            if (!pvMatch) pvMatch = fullText.match(/Punto de Venta\s*(\d{4,5})/i); 
+            if (pvMatch) document.getElementById('factura-pv').value = pvMatch[1].padStart(5, '0');
+
+            let nroMatch = fullText.match(/Comp\.\s*Nro:\s*(\d{8})/i);
+            if (!nroMatch) nroMatch = fullText.match(/Nro:\s*(\d{8})/i);
+            if (nroMatch) document.getElementById('factura-nro').value = nroMatch[1];
+
+            let fechaMatch = fullText.match(/Fecha de Emisión:\s*(\d{2})\/(\d{2})\/(\d{4})/i);
+            if (fechaMatch) document.getElementById('factura-fecha').value = `${fechaMatch[3]}-${fechaMatch[2]}-${fechaMatch[1]}`;
+
+            // Nuevo Motor: Busca CUALQUIER monto en la factura que termine en coma y dos decimales (ej: 22.542.375,00)
+            const regexMonedas = /(?:^|[^\d])(\d{1,3}(?:[.\s]?\d{3})*[\s]*,[\s]*\d{2})(?=[^\d]|$)/g;
+            let importes = [];
+            let match;
+            
+            while ((match = regexMonedas.exec(fullText)) !== null) {
+                // Quitamos espacios y puntos. Luego cambiamos la coma por punto para que Javascript entienda.
+                let cleanStr = match[1].replace(/\s+/g, '').replace(/\./g, '').replace(',', '.');
+                let valorNum = parseFloat(cleanStr);
+                importes.push(valorNum);
+            }
+
+            if (importes.length > 0) {
+                // El importe total en AFIP SIEMPRE es matemáticamente el número más grande del documento.
+                let total = Math.max(...importes);
+                document.getElementById('factura-total').value = total.toFixed(2).replace('.', ',');
+                showToast("¡Datos de AFIP extraídos correctamente!", "success");
+            } else {
+                showToast("Se leyeron algunos datos, cargá el total a mano.", "warning");
+            }
+        }
+
+        // ==========================================
+        // EXTRACCIÓN PDF -> ORDEN DE COMPRA
+        // ==========================================
+        async function procesarPDF(event) {
+            const file = event.target.files[0];
+            if (!file || file.type !== 'application/pdf') return;
+            document.getElementById('pdf-drop-zone').classList.add('hidden');
+            document.getElementById('pdf-loading').classList.remove('hidden');
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let lines = await extraeLineasPDF(pdf);
+                analizarTextoPDF(lines);
+            } catch (e) {} finally {
                 document.getElementById('pdf-drop-zone').classList.remove('hidden');
                 document.getElementById('pdf-loading').classList.add('hidden');
-                event.target.value = ''; 
             }
         }
 
@@ -476,15 +613,12 @@
                         currentRow = { nombre: "", cantidad: 0, precio: 0 };
                         const dataRegex = /([0-9]{1,3}(?:\.[0-9]{3})*,\d{2})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?)\s+(?:Ver Detalle\s*)?(.*?)\s*([0-9]{1,3}(?:\.[0-9]{3})*,\d{2})\s+(?:Peso|ARS|Dólar)/i;
                         let dataMatch = line.match(dataRegex);
-                        
                         if (dataMatch) {
                             currentRow.cantidad = parseFloat(dataMatch[1].replace(/\./g, '').replace(',', '.'));
                             currentRow.precio = parseFloat(dataMatch[4].replace(/\./g, '').replace(',', '.'));
                             let cleanLine = line.replace(startMatch[1] + " " + startMatch[2] + " " + startMatch[3], "").replace(dataMatch[0], "").replace(/[0-9]{1,3}(?:\.[0-9]{3})*,\d{2}$/, "").replace(/Ver Detalle/gi, "").trim();
                             currentRow.nombre = (cleanLine + " " + (dataMatch[3] ? dataMatch[3] : "")).trim();
-                        } else {
-                            currentRow.nombre = startMatch[4]; 
-                        }
+                        } else { currentRow.nombre = startMatch[4]; }
                     } else if (currentRow) {
                         let cleanLine = line.replace(/^[\d.-]+\s+/, '').replace(/(?:Peso|Argentino|Dólar|Estadounidense)/gi, '').trim();
                         if (cleanLine) currentRow.nombre += " " + cleanLine;
@@ -494,7 +628,6 @@
             if (currentRow) { productos.push(currentRow); }
 
             productos.forEach(p => { p.nombre = p.nombre.replace(/\s{2,}/g, ' ').trim(); if (!p.nombre) p.nombre = "Producto extraído (Revisar)"; });
-
             if(ocNumero) document.getElementById('oc-numero').value = ocNumero;
             if(ocProceso) document.getElementById('oc-proceso').value = ocProceso;
             if(ocDesc) document.getElementById('oc-descripcion').value = ocDesc;
@@ -502,33 +635,27 @@
             if (productos.length > 0) {
                 document.getElementById('oc-productos-container').innerHTML = '';
                 productos.forEach(p => agregarFilaProductoOC(p));
-                showToast(`¡Éxito! Se extrajeron los datos y ${productos.length} renglones correctamente.`, "success");
-            } else if (ocNumero || ocProceso) {
-                showToast("Se cargaron datos de cabecera, pero no se detectaron renglones automáticamente.", "warning");
-            } else {
-                showToast("No se pudo extraer la información del PDF.", "error");
+                showToast(`¡Éxito! Se extrajeron ${productos.length} renglones.`, "success");
             }
         }
 
         // ==========================================
-        // EXTRACCIÓN PDF -> SPR (NUEVO MOTOR DE PROXIMIDAD)
+        // EXTRACCIÓN PDF -> SPR (PROXIMIDAD)
         // ==========================================
         async function procesarPDFSPR(event) {
             const file = event.target.files[0];
-            if (!file || file.type !== 'application/pdf') return showToast("Selecciona un PDF de SPR válido.", "error");
+            if (!file || file.type !== 'application/pdf') return;
             document.getElementById('pdf-drop-zone-spr').classList.add('hidden');
             document.getElementById('pdf-loading-spr').classList.remove('hidden');
-
             try {
                 const arrayBuffer = await file.arrayBuffer();
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 let lines = await extraeLineasPDF(pdf);
                 analizarTextoPDFSPR(lines);
-            } catch (error) { showToast("Error al leer el PDF de la SPR.", "error"); } 
+            } catch (error) {} 
             finally {
                 document.getElementById('pdf-drop-zone-spr').classList.remove('hidden');
                 document.getElementById('pdf-loading-spr').classList.add('hidden');
-                event.target.value = ''; 
             }
         }
 
@@ -536,30 +663,17 @@
             const fullText = lines.join(" ").toLowerCase();
             let sprNumero = "";
             
-            // 1. Extraer Cabeceras
             let sprMatch = fullText.match(/solicitud de provisión:\s*([a-z0-9/-]+)/);
             if (sprMatch) sprNumero = sprMatch[1].toUpperCase();
 
             let dateMatch = fullText.match(/fecha creación:\s*(\d{2})\/(\d{2})\/(\d{4})/);
-            if (dateMatch) {
-                document.getElementById('spr-fecha').value = `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`;
-            }
-            if (sprNumero) {
-                document.getElementById('spr-numero').value = sprNumero;
-            }
+            if (dateMatch) document.getElementById('spr-fecha').value = `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`;
+            if (sprNumero) document.getElementById('spr-numero').value = sprNumero;
 
-            // 2. Extraer TODOS los números con formato "X,XXXXXX" (Cantidad o Precio de Comprar)
-            // Se usa 2 a 6 decimales por seguridad, aunque la cantidad siempre viene con 6 (ej: 5,000000)
             const regexNumeros = /(?:\b|\s)(\d{1,6}(?:\.\d{3})*,\d{2,6})(?=\s|$|[a-z])/g;
             let allMatches = [...fullText.matchAll(regexNumeros)];
-            
-            let sprNumbers = allMatches.map(m => ({
-                val: parseFloat(m[1].replace(/\./g, '').replace(',', '.')),
-                index: m.index,
-                used: false
-            }));
+            let sprNumbers = allMatches.map(m => ({ val: parseFloat(m[1].replace(/\./g, '').replace(',', '.')), index: m.index, used: false }));
 
-            // 3. Cruzar datos leyendo la tabla de la interfaz y buscando su texto en el PDF
             const inputs = document.querySelectorAll('.spr-input-cant');
             let matchedCount = 0;
 
@@ -567,63 +681,39 @@
                 const tr = input.closest('tr');
                 const prodName = tr.querySelector('td').innerText.toLowerCase();
                 
-                // Dividimos la descripción que tenés en pantalla en palabras clave
                 let pWordsRaw = prodName.match(/[a-z0-9áéíóúñ]{4,}/g) || [];
-                // Ignorar palabras genéricas para no tener falsos positivos
                 const ignoreWords = ['peso', 'argentino', 'unidad', 'dólar', 'total', 'tipo', 'corte', 'especie', 'presentacion', 'detalle', 'para'];
                 let pWords = [...new Set(pWordsRaw.filter(w => !ignoreWords.includes(w)))];
-                
                 if (pWords.length === 0) return;
 
                 let bestNums = [];
-
                 sprNumbers.forEach(num => {
                     if (num.used) return;
-                    
-                    // Armamos una ventana de texto alrededor del número encontrado
                     let start = Math.max(0, num.index - 300);
                     let end = Math.min(fullText.length, num.index + 300);
                     let context = fullText.substring(start, end);
-                    
-                    // ¿Cuántas palabras del producto están cerca de este número?
                     let score = 0;
-                    pWords.forEach(w => {
-                        if (context.includes(w)) score++;
-                    });
+                    pWords.forEach(w => { if (context.includes(w)) score++; });
 
-                    // Si hay coincidencia sólida, lo guardamos como candidato
-                    if (score >= 2 || (pWords.length === 1 && score === 1)) {
-                        bestNums.push({ num: num, score: score });
-                    }
+                    if (score >= 2 || (pWords.length === 1 && score === 1)) bestNums.push({ num: num, score: score });
                 });
 
                 if (bestNums.length > 0) {
-                    // Si encontró varios candidatos (ej: cantidad y precio juntos), 
-                    // los ordena por mayor coincidencia de palabras. 
-                    // Si empatan, se queda con el que apareció primero en el PDF (que en Comprar siempre es la Cantidad a Pedir).
                     bestNums.sort((a, b) => b.score - a.score || a.num.index - b.num.index);
-                    
                     let best = bestNums[0].num;
                     input.value = best.val;
-                    best.used = true; // Lo marcamos usado para que el siguiente producto no lo robe
+                    best.used = true;
                     input.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); 
                     matchedCount++;
                 }
             });
 
-            if (matchedCount > 0) {
-                showToast(`¡Éxito! Se autocompletaron ${matchedCount} cantidades cruzando datos con la OC.`, "success");
-            } else if (sprNumero) {
-                showToast("Se cargó Nro y Fecha, pero no se encontraron cantidades compatibles para rellenar.", "warning");
-            } else {
-                showToast("No se pudo detectar el formato de la SPR.", "error");
-            }
+            if (matchedCount > 0) showToast(`Se autocompletaron ${matchedCount} cantidades.`, "success");
         }
 
         function limpiarCantidadesSPR() {
             document.querySelectorAll('.spr-input-cant').forEach(input => {
-                input.value = '';
-                input.classList.remove('bg-green-100', 'border-green-500', 'text-green-800');
+                input.value = ''; input.classList.remove('bg-green-100', 'border-green-500', 'text-green-800');
             });
         }
 
@@ -646,13 +736,13 @@
                     </div>
                     <div class="w-full md:w-32">
                         <label class="text-xs text-slate-500 mb-1 block">Cant. Total</label>
-                        <input type="number" min="1" step="0.01" class="prod-cant w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="100" value="${cant}">
+                        <input type="text" class="prod-cant w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="100" value="${cant}">
                     </div>
                     <div class="w-full md:w-40">
                         <label class="text-xs text-slate-500 mb-1 block">Precio Unitario ($)</label>
-                        <input type="number" min="0.01" step="0.01" class="prod-precio w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="1500.50" value="${precio}">
+                        <input type="text" class="prod-precio w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="1500,50" value="${precio}">
                     </div>
-                    <button type="button" onclick="eliminarFilaProducto('${rowId}')" class="bg-red-100 text-red-600 p-2 rounded hover:bg-red-200 transition flex-shrink-0" title="Eliminar Fila">
+                    <button type="button" onclick="eliminarFilaProducto('${rowId}')" class="bg-red-100 text-red-600 p-2 rounded hover:bg-red-200 transition flex-shrink-0">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>`;
@@ -666,8 +756,7 @@
             const numero = document.getElementById('oc-numero').value.trim();
             const proceso = document.getElementById('oc-proceso').value.trim();
             const descripcion = document.getElementById('oc-descripcion').value.trim();
-            
-            if (!numero || !proceso || !descripcion) return showToast("Completá los campos principales (OC, Proceso y Descripción)", "error");
+            if (!numero || !proceso || !descripcion) return showToast("Completá los campos principales", "error");
 
             const productRows = document.querySelectorAll('.product-row');
             if (productRows.length === 0) return showToast("Agregá al menos un producto a la OC", "error");
@@ -675,32 +764,35 @@
             const productos = [];
             for (let row of productRows) {
                 const nombre = row.querySelector('.prod-nombre').value.trim();
-                const cant = parseFloat(row.querySelector('.prod-cant').value);
-                const precio = parseFloat(row.querySelector('.prod-precio').value);
-                if (!nombre || isNaN(cant) || isNaN(precio) || cant <= 0 || precio <= 0) return showToast("Revisá que todos los productos tengan nombre, cantidad y precio válidos.", "error");
+                const cant = parseFloat(row.querySelector('.prod-cant').value.replace(/\./g, '').replace(',', '.'));
+                const precio = parseFloat(row.querySelector('.prod-precio').value.replace(/\./g, '').replace(',', '.'));
+                if (!nombre || isNaN(cant) || isNaN(precio) || cant <= 0 || precio <= 0) return showToast("Revisá nombre, cantidad y precio", "error");
                 productos.push({ id_prod: generateId(), nombre, cantidad_total: cant, precio_unitario: precio });
             }
 
             const nuevaOC = {
                 numero_oc: numero, numero_proceso: proceso, descripcion: descripcion,
-                fecha_creacion: new Date().toISOString(), productos: productos, sprs: [], remitos: []
+                fecha_creacion: new Date().toISOString(), productos: productos, sprs: [], remitos: [], facturas: []
             };
 
             try {
                 const ocId = `OC-${Date.now()}`;
                 const docRef = doc(db, 'ordenes_comprar', ocId); 
                 await setDoc(docRef, { ...nuevaOC, userId: currentUser.uid });
-                
                 showToast("Orden de Compra guardada con éxito."); closeModal('modal-nueva-oc');
                 document.getElementById('form-nueva-oc').reset(); document.getElementById('oc-productos-container').innerHTML = '';
                 agregarFilaProductoOC();
-            } catch (e) { showToast("Hubo un error al guardar en la Base de Datos", "error"); console.error(e); }
+            } catch (e) { showToast("Error al guardar", "error"); }
         }
 
         function calcularSaldos(oc) {
             let totalOC = 0; let totalEntregadoPlata = 0; let totalPendientePlata = 0;
             const sprs = oc.sprs || [];
             const remitos = oc.remitos || [];
+            const facturas = oc.facturas || [];
+
+            let totalFacturado = 0;
+            facturas.forEach(f => { totalFacturado += parseFloat(f.importe_total || 0); });
 
             const productosCalculados = oc.productos.map(prod => {
                 const totalMontoProd = prod.cantidad_total * prod.precio_unitario;
@@ -711,7 +803,7 @@
                 totalOC += totalMontoProd; totalEntregadoPlata += cantidadEntregada * prod.precio_unitario; totalPendientePlata += cantidadPendienteEntregar * prod.precio_unitario;
                 return { ...prod, total_monto: totalMontoProd, cantidad_pedida_spr: cantidadPedidaSPR, cantidad_entregada: cantidadEntregada, cantidad_pendiente_entregar: cantidadPendienteEntregar };
             });
-            return { ...oc, sprs, remitos, productos_calc: productosCalculados, totales: { totalOC, totalEntregadoPlata, totalPendientePlata } };
+            return { ...oc, sprs, remitos, facturas, productos_calc: productosCalculados, totales: { totalOC, totalEntregadoPlata, totalPendientePlata, totalFacturado } };
         }
 
         function cargarOrdenes() {
@@ -719,17 +811,14 @@
             if (unsubscribeOCs) unsubscribeOCs(); 
 
             const q = collection(db, 'ordenes_comprar');
-            
             unsubscribeOCs = onSnapshot(q, (snapshot) => {
                 ordenesData = []; 
                 snapshot.forEach(doc => { 
-                    if(doc.data().userId === currentUser.uid) {
-                        ordenesData.push({ id: doc.id, ...doc.data() }); 
-                    }
+                    if(doc.data().userId === currentUser.uid) { ordenesData.push({ id: doc.id, ...doc.data() }); }
                 });
                 ordenesData.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion)); 
                 renderDashboard();
-            }, (error) => { showToast("Error al cargar datos.", "error"); console.error(error); });
+            });
         }
 
         function filterOCs() { renderDashboard(); }
@@ -737,7 +826,7 @@
         function renderDashboard() {
             const container = document.getElementById('oc-container');
             const searchTerms = document.getElementById('search-input').value.toLowerCase();
-            let html = ''; let globalAdjudicado = 0; let globalEntregado = 0; let globalPendiente = 0;
+            let html = ''; let globalAdjudicado = 0; let globalEntregado = 0; let globalPendiente = 0; let globalFacturado = 0;
 
             if (ordenesData.length === 0) {
                 container.innerHTML = `
@@ -746,49 +835,50 @@
                         <p class="text-slate-500 font-medium text-lg">No hay Órdenes de Compra cargadas.</p>
                         <p class="text-slate-400 text-sm mt-1">Hacé clic en "Nueva OC" para comenzar a gestionar.</p>
                     </div>`;
-                actualizarStats(0, 0, 0); return;
+                actualizarStats(0, 0, 0, 0); return;
             }
 
             ordenesData.forEach(rawOc => {
                 const oc = calcularSaldos(rawOc);
-                globalAdjudicado += oc.totales.totalOC; globalEntregado += oc.totales.totalEntregadoPlata; globalPendiente += oc.totales.totalPendientePlata;
+                globalAdjudicado += oc.totales.totalOC; globalEntregado += oc.totales.totalEntregadoPlata; 
+                globalPendiente += oc.totales.totalPendientePlata; globalFacturado += oc.totales.totalFacturado;
 
                 if (searchTerms && !oc.numero_oc.toLowerCase().includes(searchTerms) && !oc.descripcion.toLowerCase().includes(searchTerms) && !(oc.numero_proceso && oc.numero_proceso.toLowerCase().includes(searchTerms))) return;
 
                 let rowsHtml = '';
                 oc.productos_calc.forEach(p => {
                     const statusColor = p.cantidad_pendiente_entregar === 0 ? 'text-green-600 bg-green-50' : (p.cantidad_entregada > 0 ? 'text-blue-600 bg-blue-50' : 'text-slate-600');
-                    const warningSPR = p.cantidad_pedida_spr > p.cantidad_total ? '<i class="fa-solid fa-triangle-exclamation text-red-500" title="Excede total"></i>' : '';
                     rowsHtml += `
                         <tr class="hover:bg-slate-50 transition border-b border-slate-100 last:border-0">
                             <td class="px-4 py-3 text-sm text-slate-800 font-medium" title="${p.nombre}">${p.nombre.length > 50 ? p.nombre.substring(0, 50) + '...' : p.nombre}</td>
                             <td class="px-4 py-3 text-sm text-center text-slate-500">${p.cantidad_total}</td>
-                            <td class="px-4 py-3 text-sm text-center text-slate-600 font-medium">${formatMoney(p.precio_unitario)}</td>
                             <td class="px-4 py-3 text-sm text-center font-semibold text-slate-700 bg-slate-50">${formatMoney(p.total_monto)}</td>
-                            <td class="px-4 py-3 text-sm text-center text-blue-600">${p.cantidad_pedida_spr} ${warningSPR}</td>
+                            <td class="px-4 py-3 text-sm text-center text-blue-600">${p.cantidad_pedida_spr}</td>
                             <td class="px-4 py-3 text-sm text-center font-bold ${statusColor} rounded">${p.cantidad_entregada}</td>
                             <td class="px-4 py-3 text-sm text-center text-orange-600 font-bold">${p.cantidad_pendiente_entregar}</td>
                         </tr>`;
                 });
 
                 const porcAvance = oc.totales.totalOC > 0 ? (oc.totales.totalEntregadoPlata / oc.totales.totalOC) * 100 : 0;
+                const porcFacturado = oc.totales.totalOC > 0 ? (oc.totales.totalFacturado / oc.totales.totalOC) * 100 : 0;
 
                 html += `
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-4">
                         <div class="p-5 cursor-pointer hover:bg-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition" onclick="toggleAccordion('${oc.id}')">
                             <div class="flex-grow">
                                 <div class="flex items-center gap-3 mb-1">
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded border border-blue-200" title="Nro. Orden de Compra">${oc.numero_oc}</span>
-                                    ${oc.numero_proceso ? `<span class="bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded border border-slate-200" title="Nro. Proceso Licitatorio"><i class="fa-solid fa-folder-tree mr-1"></i>${oc.numero_proceso}</span>` : ''}
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded border border-blue-200">${oc.numero_oc}</span>
+                                    ${oc.numero_proceso ? `<span class="bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded border border-slate-200"><i class="fa-solid fa-folder-tree mr-1"></i>${oc.numero_proceso}</span>` : ''}
                                     <h3 class="text-lg font-bold text-slate-800 ml-2">${oc.descripcion}</h3>
                                 </div>
-                                <div class="flex items-center gap-4 mt-2">
-                                    <div class="w-48 bg-slate-200 rounded-full h-2.5"><div class="bg-green-600 h-2.5 rounded-full" style="width: ${porcAvance}%"></div></div>
-                                    <span class="text-xs font-medium text-slate-500">${porcAvance.toFixed(1)}% Entregado</span>
+                                <div class="flex items-center gap-6 mt-2">
+                                    <div class="flex items-center gap-2"><div class="w-32 bg-slate-200 rounded-full h-2"><div class="bg-green-600 h-2 rounded-full" style="width: ${porcAvance}%"></div></div><span class="text-[11px] font-medium text-slate-500">${porcAvance.toFixed(1)}% Entregado</span></div>
+                                    <div class="flex items-center gap-2"><div class="w-32 bg-slate-200 rounded-full h-2"><div class="bg-purple-600 h-2 rounded-full" style="width: ${porcFacturado}%"></div></div><span class="text-[11px] font-medium text-slate-500">${porcFacturado.toFixed(1)}% Facturado</span></div>
                                 </div>
                             </div>
                             <div class="flex gap-4 text-right">
-                                <div><p class="text-xs text-slate-500">Total OC</p><p class="font-bold text-slate-800">${formatMoney(oc.totales.totalOC)}</p></div>
+                                <div><p class="text-xs text-slate-500">Adjudicado</p><p class="font-bold text-slate-800">${formatMoney(oc.totales.totalOC)}</p></div>
+                                <div><p class="text-xs text-purple-600">Facturado</p><p class="font-bold text-purple-700">${formatMoney(oc.totales.totalFacturado)}</p></div>
                                 <div><p class="text-xs text-slate-500">Pendiente $</p><p class="font-bold text-orange-600">${formatMoney(oc.totales.totalPendientePlata)}</p></div>
                                 <i class="fa-solid fa-chevron-down text-slate-400 mt-2 transition-transform transform id-chevron-${oc.id}"></i>
                             </div>
@@ -796,12 +886,9 @@
                         <div id="content-${oc.id}" class="accordion-content bg-slate-50 border-t border-slate-200">
                             <div class="p-5">
                                 <div class="flex gap-3 mb-4">
-                                    <button onclick="abrirModalSPR('${oc.id}')" class="bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm">
-                                        <i class="fa-solid fa-plus-circle mr-2"></i> Cargar SPR
-                                    </button>
-                                    <button onclick="abrirModalRemito('${oc.id}')" class="bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm">
-                                        <i class="fa-solid fa-truck-loading mr-2"></i> Cargar Remito
-                                    </button>
+                                    <button onclick="abrirModalSPR('${oc.id}')" class="bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg text-sm font-semibold transition flex items-center shadow-sm"><i class="fa-solid fa-plus-circle mr-2"></i> Cargar SPR</button>
+                                    <button onclick="abrirModalRemito('${oc.id}')" class="bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 px-3 py-1.5 rounded-lg text-sm font-semibold transition flex items-center shadow-sm"><i class="fa-solid fa-truck-loading mr-2"></i> Cargar Remito</button>
+                                    <button onclick="abrirModalFactura('${oc.id}')" class="bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-lg text-sm font-semibold transition flex items-center shadow-sm"><i class="fa-solid fa-file-invoice mr-2"></i> Cargar Factura</button>
                                 </div>
                                 <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm mb-6 bg-white">
                                     <table class="min-w-full divide-y divide-slate-200">
@@ -809,7 +896,6 @@
                                             <tr>
                                                 <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase">Producto</th>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-slate-600 uppercase">Cant. Total</th>
-                                                <th class="px-4 py-3 text-center text-xs font-bold text-slate-600 uppercase">Precio Unit.</th>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-slate-800 uppercase bg-slate-200">Monto Total</th>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-blue-700 uppercase">En SPRs</th>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-green-700 uppercase">Entregado</th>
@@ -819,39 +905,40 @@
                                         <tbody class="divide-y divide-slate-200">${rowsHtml}</tbody>
                                     </table>
                                 </div>
-                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                                    <!-- Columna SPRs -->
                                     <div class="bg-white border border-blue-100 rounded-lg p-4 shadow-sm">
-                                        <h4 class="font-bold text-blue-800 border-b border-blue-100 pb-2 mb-3"><i class="fa-solid fa-list-check mr-2"></i>Historial de SPRs</h4>
-                                        ${oc.sprs.length === 0 ? '<p class="text-sm text-slate-400 italic">No hay SPRs cargadas</p>' : 
+                                        <h4 class="font-bold text-blue-800 border-b border-blue-100 pb-2 mb-3"><i class="fa-solid fa-list-check mr-2"></i>SPRs</h4>
+                                        ${oc.sprs.length === 0 ? '<p class="text-xs text-slate-400 italic">No hay SPRs</p>' : 
                                             oc.sprs.map(spr => `
                                             <div class="bg-slate-50 p-2 rounded border border-slate-200 mb-2 text-sm flex justify-between items-center group">
-                                                <div>
-                                                    <span class="font-semibold text-slate-700">${spr.numero}</span>
-                                                    <div class="text-[10px] text-slate-500 mt-0.5">Orig: ${spr.fecha_creacion || spr.fecha} ${spr.fecha_edicion ? `<br><span class="text-blue-600">Edit: ${spr.fecha_edicion}</span>` : ''}</div>
-                                                </div>
-                                                <div class="flex items-center gap-3">
-                                                    <span class="text-slate-500"><i class="fa-regular fa-calendar mr-1"></i>${spr.fecha}</span>
-                                                    <button onclick="abrirModalSPR('${oc.id}', '${spr.id}')" class="text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition" title="Editar SPR"><i class="fa-solid fa-pen"></i></button>
-                                                </div>
-                                            </div>`).join('')
-                                        }
+                                                <div><span class="font-semibold text-slate-700 text-xs">${spr.numero}</span></div>
+                                                <div class="flex items-center gap-2"><span class="text-xs text-slate-500">${spr.fecha}</span><button onclick="abrirModalSPR('${oc.id}', '${spr.id}')" class="text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pen"></i></button></div>
+                                            </div>`).join('')}
                                     </div>
+                                    <!-- Columna Remitos -->
                                     <div class="bg-white border border-green-100 rounded-lg p-4 shadow-sm">
-                                        <h4 class="font-bold text-green-800 border-b border-green-100 pb-2 mb-3"><i class="fa-solid fa-receipt mr-2"></i>Historial de Remitos</h4>
-                                        ${oc.remitos.length === 0 ? '<p class="text-sm text-slate-400 italic">No hay Remitos cargados</p>' : 
+                                        <h4 class="font-bold text-green-800 border-b border-green-100 pb-2 mb-3"><i class="fa-solid fa-receipt mr-2"></i>Remitos</h4>
+                                        ${oc.remitos.length === 0 ? '<p class="text-xs text-slate-400 italic">No hay Remitos</p>' : 
                                             oc.remitos.map(rem => `
                                             <div class="bg-slate-50 p-2 rounded border border-slate-200 mb-2 text-sm flex justify-between items-center group">
+                                                <div><span class="font-semibold text-slate-700 text-xs block">${rem.numero}</span>${rem.spr_vinculada ? `<span class="text-[10px] text-blue-600">Ref: ${rem.spr_vinculada}</span>` : ''}</div>
+                                                <div class="flex items-center gap-2"><span class="text-xs text-slate-500">${rem.fecha}</span><button onclick="abrirModalRemito('${oc.id}', '${rem.id}')" class="text-green-400 hover:text-green-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pen"></i></button></div>
+                                            </div>`).join('')}
+                                    </div>
+                                    <!-- Columna Facturas -->
+                                    <div class="bg-white border border-purple-100 rounded-lg p-4 shadow-sm">
+                                        <h4 class="font-bold text-purple-800 border-b border-purple-100 pb-2 mb-3"><i class="fa-solid fa-file-invoice mr-2"></i>Facturas AFIP</h4>
+                                        ${oc.facturas.length === 0 ? '<p class="text-xs text-slate-400 italic">No hay Facturas</p>' : 
+                                            oc.facturas.map(fac => `
+                                            <div class="bg-slate-50 p-2 rounded border border-slate-200 mb-2 text-sm flex justify-between items-center group">
                                                 <div>
-                                                    <span class="font-semibold text-slate-700 mr-2">${rem.numero}</span>
-                                                    ${rem.spr_vinculada ? `<span class="text-xs bg-blue-100 text-blue-800 px-1 rounded border border-blue-200">${rem.spr_vinculada}</span>` : ''}
-                                                    <div class="text-[10px] text-slate-500 mt-0.5">Orig: ${rem.fecha_creacion || rem.fecha} ${rem.fecha_edicion ? `<br><span class="text-green-600">Edit: ${rem.fecha_edicion}</span>` : ''}</div>
+                                                    <span class="font-bold text-purple-700 text-xs block">${fac.pv}-${fac.nro}</span>
+                                                    <span class="text-[10px] text-slate-500 font-semibold">${formatMoney(fac.importe_total)}</span>
+                                                    ${fac.vinculo !== 'General OC' ? `<br><span class="text-[9px] text-slate-400">Ref: ${fac.vinculo}</span>` : ''}
                                                 </div>
-                                                <div class="flex items-center gap-3">
-                                                    <span class="text-slate-500"><i class="fa-regular fa-calendar mr-1"></i>${rem.fecha}</span>
-                                                    <button onclick="abrirModalRemito('${oc.id}', '${rem.id}')" class="text-green-400 hover:text-green-600 opacity-0 group-hover:opacity-100 transition" title="Editar Remito"><i class="fa-solid fa-pen"></i></button>
-                                                </div>
-                                            </div>`).join('')
-                                        }
+                                                <div class="flex items-center gap-2"><span class="text-[10px] text-slate-500">${fac.fecha}</span><button onclick="abrirModalFactura('${oc.id}', '${fac.id}')" class="text-purple-400 hover:text-purple-600 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-pen"></i></button></div>
+                                            </div>`).join('')}
                                     </div>
                                 </div>
                             </div>
@@ -860,13 +947,14 @@
             });
 
             container.innerHTML = html || `<p class="text-center text-slate-500 py-10">No se encontraron resultados para la búsqueda.</p>`;
-            actualizarStats(globalAdjudicado, globalEntregado, globalPendiente);
+            actualizarStats(globalAdjudicado, globalEntregado, globalPendiente, globalFacturado);
         }
 
-        function actualizarStats(adj, ent, pend) {
+        function actualizarStats(adj, ent, pend, fact) {
             document.getElementById('stat-total-oc').innerText = formatMoney(adj);
             document.getElementById('stat-total-entregado').innerText = formatMoney(ent);
             document.getElementById('stat-total-pendiente').innerText = formatMoney(pend);
+            document.getElementById('stat-total-facturado').innerText = formatMoney(fact);
         }
 
         function toggleAccordion(id) {
@@ -876,171 +964,147 @@
             else { content.classList.add('open'); icon.style.transform = 'rotate(180deg)'; }
         }
 
+        // ==========================
+        // LÓGICA DE SPR
+        // ==========================
         function abrirModalSPR(ocId, sprId = null) {
-            editandoSPRId = sprId;
-            const oc = ordenesData.find(o => o.id === ocId);
-            if (!oc) return;
+            editandoSPRId = sprId; const oc = ordenesData.find(o => o.id === ocId); if (!oc) return;
             const ocCalculada = calcularSaldos(oc);
 
             let sprAEditar = null;
-            if (sprId) {
-                sprAEditar = oc.sprs.find(s => s.id === sprId);
-                document.getElementById('spr-modal-title').innerHTML = `<i class="fa-solid fa-pen mr-2 text-blue-600"></i>Editar Solicitud de Provisión (SPR)`;
-            } else {
-                document.getElementById('spr-modal-title').innerHTML = `<i class="fa-solid fa-file-export mr-2 text-blue-600"></i>Cargar Solicitud de Provisión (SPR)`;
-            }
+            if (sprId) { sprAEditar = oc.sprs.find(s => s.id === sprId); document.getElementById('spr-modal-title').innerHTML = `<i class="fa-solid fa-pen mr-2 text-blue-600"></i>Editar SPR`; } 
+            else { document.getElementById('spr-modal-title').innerHTML = `<i class="fa-solid fa-file-export mr-2 text-blue-600"></i>Cargar SPR`; }
 
-            document.getElementById('spr-oc-id').value = oc.id;
-            document.getElementById('spr-oc-numero').innerText = oc.numero_oc;
+            document.getElementById('spr-oc-id').value = oc.id; document.getElementById('spr-oc-numero').innerText = oc.numero_oc;
             document.getElementById('spr-numero').value = sprAEditar ? sprAEditar.numero : '';
-            if (sprAEditar && sprAEditar.fecha) document.getElementById('spr-fecha').value = sprAEditar.fecha;
-            else document.getElementById('spr-fecha').valueAsDate = new Date();
+            if (sprAEditar && sprAEditar.fecha) document.getElementById('spr-fecha').value = sprAEditar.fecha; else document.getElementById('spr-fecha').valueAsDate = new Date();
             
-            const tbody = document.getElementById('spr-productos-lista');
-            tbody.innerHTML = '';
-
+            const tbody = document.getElementById('spr-productos-lista'); tbody.innerHTML = '';
             ocCalculada.productos_calc.forEach(p => {
-                let cantEnEstaSPR = 0;
-                if (sprAEditar) {
-                    const item = sprAEditar.items.find(i => i.id_prod === p.id_prod);
-                    if (item) cantEnEstaSPR = item.cantidad;
-                }
+                let cantEnEstaSPR = sprAEditar ? (sprAEditar.items.find(i => i.id_prod === p.id_prod)?.cantidad || 0) : 0;
                 const pendPedir = p.cantidad_total - p.cantidad_pedida_spr + cantEnEstaSPR;
-                
-                const html = `
-                    <tr>
-                        <td class="px-4 py-3 text-sm text-slate-800" title="${p.nombre}">${p.nombre.length > 60 ? p.nombre.substring(0, 60) + '...' : p.nombre}</td>
-                        <td class="px-4 py-3 text-sm text-right font-medium">${p.cantidad_total}</td>
-                        <td class="px-4 py-3 text-sm text-right text-blue-600 font-bold">${pendPedir}</td>
-                        <td class="px-4 py-2 text-right">
-                            <input type="number" min="0" data-prod-id="${p.id_prod}" value="${cantEnEstaSPR || ''}" class="spr-input-cant w-24 border border-slate-300 rounded px-2 py-1 text-sm text-right focus:ring-1 focus:ring-blue-500 outline-none transition-colors" placeholder="0">
-                        </td>
-                    </tr>`;
-                tbody.insertAdjacentHTML('beforeend', html);
+                tbody.insertAdjacentHTML('beforeend', `<tr><td class="px-4 py-3 text-sm text-slate-800" title="${p.nombre}">${p.nombre.length > 60 ? p.nombre.substring(0, 60) + '...' : p.nombre}</td><td class="px-4 py-3 text-sm text-right font-medium">${p.cantidad_total}</td><td class="px-4 py-3 text-sm text-right text-blue-600 font-bold">${pendPedir}</td><td class="px-4 py-2 text-right"><input type="text" min="0" data-prod-id="${p.id_prod}" value="${cantEnEstaSPR || ''}" class="spr-input-cant w-24 border border-slate-300 rounded px-2 py-1 text-sm text-right focus:ring-1 focus:ring-blue-500 outline-none transition-colors" placeholder="0"></td></tr>`);
             });
             openModal('modal-nueva-spr');
         }
 
         async function guardarSPR() {
             if (!currentUser) return;
-            const ocId = document.getElementById('spr-oc-id').value;
-            const sprNro = document.getElementById('spr-numero').value.trim();
-            const fecha = document.getElementById('spr-fecha').value;
-
+            const ocId = document.getElementById('spr-oc-id').value; const sprNro = document.getElementById('spr-numero').value.trim(); const fecha = document.getElementById('spr-fecha').value;
             if (!sprNro || !fecha) return showToast("Complete Número y Fecha de SPR", "error");
 
-            const inputs = document.querySelectorAll('.spr-input-cant');
             const itemsPedidos = []; let hayCantidades = false;
-
-            inputs.forEach(input => {
-                const cant = parseFloat(input.value);
-                if (cant > 0) { hayCantidades = true; itemsPedidos.push({ id_prod: input.getAttribute('data-prod-id'), cantidad: cant }); }
-            });
-
+            document.querySelectorAll('.spr-input-cant').forEach(input => { const cant = parseFloat(input.value.replace(/\./g, '').replace(',', '.')); if (cant > 0) { hayCantidades = true; itemsPedidos.push({ id_prod: input.getAttribute('data-prod-id'), cantidad: cant }); }});
             if (!hayCantidades) return showToast("Debe pedir cantidad > 0 de al menos un producto.", "error");
 
-            const docRef = doc(db, 'ordenes_comprar', ocId);
-            const ocOriginal = ordenesData.find(o => o.id === ocId);
-            let nuevasSPRs; const timestamp = getFechaHoraActual();
+            const ocOriginal = ordenesData.find(o => o.id === ocId); let nuevasSPRs; const timestamp = getFechaHoraActual();
+            if (editandoSPRId) nuevasSPRs = ocOriginal.sprs.map(s => s.id === editandoSPRId ? { ...s, numero: sprNro, fecha, items: itemsPedidos, fecha_edicion: timestamp, fecha_creacion: s.fecha_creacion || timestamp } : s);
+            else nuevasSPRs = [...(ocOriginal.sprs||[]), { id: `spr-${Date.now()}`, numero: sprNro, fecha, items: itemsPedidos, fecha_creacion: timestamp }];
 
-            if (editandoSPRId) {
-                nuevasSPRs = ocOriginal.sprs.map(s => s.id === editandoSPRId ? { ...s, numero: sprNro, fecha, items: itemsPedidos, fecha_edicion: timestamp, fecha_creacion: s.fecha_creacion || timestamp } : s);
-            } else {
-                nuevasSPRs = [...ocOriginal.sprs, { id: `spr-${Date.now()}`, numero: sprNro, fecha, items: itemsPedidos, fecha_creacion: timestamp }];
-            }
-
-            try {
-                await updateDoc(docRef, { sprs: nuevasSPRs });
-                showToast(`SPR ${sprNro} guardada correctamente.`);
-                closeModal('modal-nueva-spr'); editandoSPRId = null;
-            } catch (e) { showToast("Error al guardar la SPR en la Base de Datos.", "error"); }
+            try { await updateDoc(doc(db, 'ordenes_comprar', ocId), { sprs: nuevasSPRs }); showToast(`SPR guardada.`); closeModal('modal-nueva-spr'); editandoSPRId = null; } catch (e) { showToast("Error", "error"); }
         }
 
+        // ==========================
+        // LÓGICA DE REMITOS
+        // ==========================
         function abrirModalRemito(ocId, remitoId = null) {
-            editandoRemitoId = remitoId;
-            const oc = ordenesData.find(o => o.id === ocId);
-            if (!oc) return;
+            editandoRemitoId = remitoId; const oc = ordenesData.find(o => o.id === ocId); if (!oc) return;
             const ocCalculada = calcularSaldos(oc);
 
             let remitoAEditar = null;
-            if (remitoId) {
-                remitoAEditar = oc.remitos.find(r => r.id === remitoId);
-                document.querySelector('#modal-nuevo-remito h3').innerHTML = `<i class="fa-solid fa-pen text-green-600 mr-2"></i>Editar Remito de Entrega`;
-            } else {
-                document.querySelector('#modal-nuevo-remito h3').innerHTML = `<i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega`;
-            }
+            if (remitoId) { remitoAEditar = oc.remitos.find(r => r.id === remitoId); document.querySelector('#modal-nuevo-remito h3').innerHTML = `<i class="fa-solid fa-pen text-green-600 mr-2"></i>Editar Remito`; } 
+            else { document.querySelector('#modal-nuevo-remito h3').innerHTML = `<i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito`; }
 
-            document.getElementById('remito-oc-id').value = oc.id;
-            document.getElementById('remito-oc-numero').innerText = oc.numero_oc;
+            document.getElementById('remito-oc-id').value = oc.id; document.getElementById('remito-oc-numero').innerText = oc.numero_oc;
             document.getElementById('remito-numero').value = remitoAEditar ? remitoAEditar.numero : '';
-            if (remitoAEditar && remitoAEditar.fecha) document.getElementById('remito-fecha').value = remitoAEditar.fecha;
-            else document.getElementById('remito-fecha').valueAsDate = new Date();
+            if (remitoAEditar && remitoAEditar.fecha) document.getElementById('remito-fecha').value = remitoAEditar.fecha; else document.getElementById('remito-fecha').valueAsDate = new Date();
             
-            const selectSPR = document.getElementById('remito-spr-vinculada');
-            selectSPR.innerHTML = '<option value="">-- Sin vincular / Entrega Libre --</option>';
-            oc.sprs.forEach(spr => {
-                const selected = (remitoAEditar && remitoAEditar.spr_vinculada === spr.numero) ? 'selected' : '';
-                selectSPR.innerHTML += `<option value="${spr.numero}" ${selected}>${spr.numero} (${spr.fecha})</option>`;
-            });
+            const selectSPR = document.getElementById('remito-spr-vinculada'); selectSPR.innerHTML = '<option value="">-- General OC --</option>';
+            (oc.sprs||[]).forEach(spr => { selectSPR.innerHTML += `<option value="SPR: ${spr.numero}" ${remitoAEditar?.spr_vinculada === 'SPR: '+spr.numero ? 'selected' : ''}>SPR: ${spr.numero}</option>`; });
 
-            const tbody = document.getElementById('remito-productos-lista');
-            tbody.innerHTML = '';
-
+            const tbody = document.getElementById('remito-productos-lista'); tbody.innerHTML = '';
             ocCalculada.productos_calc.forEach(p => {
-                let cantEnEsteRemito = 0;
-                if (remitoAEditar) {
-                    const item = remitoAEditar.items.find(i => i.id_prod === p.id_prod);
-                    if (item) cantEnEsteRemito = item.cantidad;
-                }
+                let cantEnEsteRemito = remitoAEditar ? (remitoAEditar.items.find(i => i.id_prod === p.id_prod)?.cantidad || 0) : 0;
                 const pendienteEntregar = p.cantidad_pendiente_entregar + cantEnEsteRemito;
-
-                const html = `
-                    <tr>
-                        <td class="px-4 py-3 text-sm text-slate-800" title="${p.nombre}">${p.nombre.length > 50 ? p.nombre.substring(0, 50) + '...' : p.nombre}</td>
-                        <td class="px-4 py-3 text-sm text-right text-orange-600 font-bold">${pendienteEntregar}</td>
-                        <td class="px-4 py-2 text-right">
-                            <input type="number" min="0" max="${pendienteEntregar}" data-prod-id="${p.id_prod}" value="${cantEnEsteRemito || ''}" class="remito-input-cant w-24 border border-slate-300 rounded px-2 py-1 text-sm text-right focus:ring-1 focus:ring-green-500 outline-none" placeholder="0">
-                        </td>
-                    </tr>`;
-                tbody.insertAdjacentHTML('beforeend', html);
+                tbody.insertAdjacentHTML('beforeend', `<tr><td class="px-4 py-3 text-sm text-slate-800" title="${p.nombre}">${p.nombre.length > 50 ? p.nombre.substring(0, 50) + '...' : p.nombre}</td><td class="px-4 py-3 text-sm text-right text-orange-600 font-bold">${pendienteEntregar}</td><td class="px-4 py-2 text-right"><input type="text" min="0" max="${pendienteEntregar}" data-prod-id="${p.id_prod}" value="${cantEnEsteRemito || ''}" class="remito-input-cant w-24 border border-slate-300 rounded px-2 py-1 text-sm text-right focus:ring-1 focus:ring-green-500 outline-none" placeholder="0"></td></tr>`);
             });
             openModal('modal-nuevo-remito');
         }
 
         async function guardarRemito() {
             if (!currentUser) return;
-            const ocId = document.getElementById('remito-oc-id').value;
-            const remitoNro = document.getElementById('remito-numero').value.trim();
-            const fecha = document.getElementById('remito-fecha').value;
-            const sprVinculada = document.getElementById('remito-spr-vinculada').value;
-
+            const ocId = document.getElementById('remito-oc-id').value; const remitoNro = document.getElementById('remito-numero').value.trim(); const fecha = document.getElementById('remito-fecha').value; const sprVinculada = document.getElementById('remito-spr-vinculada').value;
             if (!remitoNro || !fecha) return showToast("Complete Número y Fecha del Remito", "error");
 
-            const inputs = document.querySelectorAll('.remito-input-cant');
             const itemsEntregados = []; let hayCantidades = false;
+            document.querySelectorAll('.remito-input-cant').forEach(input => { const cant = parseFloat(input.value.replace(/\./g, '').replace(',', '.')); if (cant > 0) { hayCantidades = true; itemsEntregados.push({ id_prod: input.getAttribute('data-prod-id'), cantidad: cant }); }});
+            if (!hayCantidades) return showToast("Debe cargar cantidad entregada.", "error");
 
-            inputs.forEach(input => {
-                const cant = parseFloat(input.value);
-                if (cant > 0) { hayCantidades = true; itemsEntregados.push({ id_prod: input.getAttribute('data-prod-id'), cantidad: cant }); }
-            });
+            const ocOriginal = ordenesData.find(o => o.id === ocId); let nuevosRemitos; const timestamp = getFechaHoraActual();
+            if (editandoRemitoId) nuevosRemitos = ocOriginal.remitos.map(r => r.id === editandoRemitoId ? { ...r, numero: remitoNro, fecha, spr_vinculada: sprVinculada, items: itemsEntregados, fecha_edicion: timestamp, fecha_creacion: r.fecha_creacion || timestamp } : r);
+            else nuevosRemitos = [...(ocOriginal.remitos||[]), { id: `rem-${Date.now()}`, numero: remitoNro, fecha, spr_vinculada: sprVinculada, items: itemsEntregados, fecha_creacion: timestamp }];
 
-            if (!hayCantidades) return showToast("Debe cargar una cantidad entregada en algún producto.", "error");
+            try { await updateDoc(doc(db, 'ordenes_comprar', ocId), { remitos: nuevosRemitos }); showToast(`Remito guardado.`); closeModal('modal-nuevo-remito'); editandoRemitoId = null; } catch (e) { showToast("Error", "error"); }
+        }
 
-            const docRef = doc(db, 'ordenes_comprar', ocId);
-            const ocOriginal = ordenesData.find(o => o.id === ocId);
-            let nuevosRemitos; const timestamp = getFechaHoraActual();
+        // ==========================
+        // LÓGICA DE FACTURAS AFIP
+        // ==========================
+        function abrirModalFactura(ocId, facturaId = null) {
+            editandoFacturaId = facturaId; const oc = ordenesData.find(o => o.id === ocId); if (!oc) return;
 
-            if (editandoRemitoId) {
-                nuevosRemitos = ocOriginal.remitos.map(r => r.id === editandoRemitoId ? { ...r, numero: remitoNro, fecha, spr_vinculada: sprVinculada, items: itemsEntregados, fecha_edicion: timestamp, fecha_creacion: r.fecha_creacion || timestamp } : r);
+            let facturaAEditar = null;
+            if (facturaId) { facturaAEditar = (oc.facturas||[]).find(f => f.id === facturaId); document.getElementById('factura-modal-title').innerHTML = `<i class="fa-solid fa-pen text-purple-600 mr-2"></i>Editar Factura`; } 
+            else { document.getElementById('factura-modal-title').innerHTML = `<i class="fa-solid fa-file-invoice text-purple-600 mr-2"></i>Cargar Factura AFIP`; }
+
+            document.getElementById('factura-oc-id').value = oc.id; document.getElementById('factura-oc-numero').innerText = oc.numero_oc;
+            document.getElementById('factura-pv').value = facturaAEditar ? facturaAEditar.pv : '';
+            document.getElementById('factura-nro').value = facturaAEditar ? facturaAEditar.nro : '';
+            
+            // Corregido: mostrar valor guardado en formato correcto
+            if(facturaAEditar && facturaAEditar.importe_total) {
+                document.getElementById('factura-total').value = parseFloat(facturaAEditar.importe_total).toFixed(2).replace('.', ',');
             } else {
-                nuevosRemitos = [...ocOriginal.remitos, { id: `rem-${Date.now()}`, numero: remitoNro, fecha, spr_vinculada: sprVinculada, items: itemsEntregados, fecha_creacion: timestamp }];
+                document.getElementById('factura-total').value = '';
             }
 
-            try {
-                await updateDoc(docRef, { remitos: nuevosRemitos });
-                showToast(`Remito ${remitoNro} procesado exitosamente.`);
-                closeModal('modal-nuevo-remito'); editandoRemitoId = null;
-            } catch (e) { showToast("Error al guardar el Remito.", "error"); }
+            if (facturaAEditar && facturaAEditar.fecha) document.getElementById('factura-fecha').value = facturaAEditar.fecha; else document.getElementById('factura-fecha').valueAsDate = new Date();
+            
+            const selectV = document.getElementById('factura-vinculo'); 
+            selectV.innerHTML = '<option value="General OC">-- General (Toda la OC) --</option>';
+            
+            const groupSPR = document.createElement('optgroup'); groupSPR.label = "Solicitudes de Provisión";
+            (oc.sprs||[]).forEach(s => groupSPR.innerHTML += `<option value="SPR: ${s.numero}" ${facturaAEditar?.vinculo === 'SPR: '+s.numero ? 'selected' : ''}>SPR: ${s.numero}</option>`);
+            if (groupSPR.children.length > 0) selectV.appendChild(groupSPR);
+
+            const groupRem = document.createElement('optgroup'); groupRem.label = "Remitos de Entrega";
+            (oc.remitos||[]).forEach(r => groupRem.innerHTML += `<option value="Remito: ${r.numero}" ${facturaAEditar?.vinculo === 'Remito: '+r.numero ? 'selected' : ''}>Remito: ${r.numero}</option>`);
+            if (groupRem.children.length > 0) selectV.appendChild(groupRem);
+
+            openModal('modal-nueva-factura');
+        }
+
+        async function guardarFactura() {
+            if (!currentUser) return;
+            const ocId = document.getElementById('factura-oc-id').value;
+            const vinculo = document.getElementById('factura-vinculo').value;
+            const pv = document.getElementById('factura-pv').value.trim();
+            const nro = document.getElementById('factura-nro').value.trim();
+            const fecha = document.getElementById('factura-fecha').value;
+            
+            // Parseo seguro eliminando separador de miles
+            const totalRaw = document.getElementById('factura-total').value.replace(/\./g, '').replace(',', '.');
+            const total = parseFloat(totalRaw);
+
+            if (!pv || !nro || !fecha || isNaN(total) || total <= 0) return showToast("Completá PV, Nro, Fecha y un Total válido.", "error");
+
+            const ocOriginal = ordenesData.find(o => o.id === ocId); let nuevasFacturas; const timestamp = getFechaHoraActual();
+            const facturaObj = { pv: pv.padStart(5, '0'), nro: nro.padStart(8, '0'), fecha, importe_total: total, vinculo };
+
+            if (editandoFacturaId) nuevasFacturas = (ocOriginal.facturas||[]).map(f => f.id === editandoFacturaId ? { ...f, ...facturaObj, fecha_edicion: timestamp } : f);
+            else nuevasFacturas = [...(ocOriginal.facturas||[]), { id: `fac-${Date.now()}`, ...facturaObj, fecha_creacion: timestamp }];
+
+            try { await updateDoc(doc(db, 'ordenes_comprar', ocId), { facturas: nuevasFacturas }); showToast(`Factura guardada correctamente.`); closeModal('modal-nueva-factura'); editandoFacturaId = null; } catch (e) { showToast("Error al guardar factura.", "error"); }
         }
 
         window.addEventListener('DOMContentLoaded', initAuth);
