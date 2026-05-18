@@ -511,7 +511,7 @@
         }
 
         // ==========================================
-        // EXTRACCIÓN PDF -> SPR (SÚPER ROBUSTA POR BLOQUES)
+        // EXTRACCIÓN PDF -> SPR (NUEVO MOTOR DE PROXIMIDAD)
         // ==========================================
         async function procesarPDFSPR(event) {
             const file = event.target.files[0];
@@ -533,14 +533,14 @@
         }
 
         function analizarTextoPDFSPR(lines) {
-            const fullText = lines.join(" ");
+            const fullText = lines.join(" ").toLowerCase();
             let sprNumero = "";
             
             // 1. Extraer Cabeceras
-            let sprMatch = fullText.match(/Número de solicitud de provisión:\s*([A-Z0-9/-]+)/i);
-            if (sprMatch) sprNumero = sprMatch[1];
+            let sprMatch = fullText.match(/solicitud de provisión:\s*([a-z0-9/-]+)/);
+            if (sprMatch) sprNumero = sprMatch[1].toUpperCase();
 
-            let dateMatch = fullText.match(/Fecha creación:\s*(\d{2})\/(\d{2})\/(\d{4})/i);
+            let dateMatch = fullText.match(/fecha creación:\s*(\d{2})\/(\d{2})\/(\d{4})/);
             if (dateMatch) {
                 document.getElementById('spr-fecha').value = `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`;
             }
@@ -548,45 +548,18 @@
                 document.getElementById('spr-numero').value = sprNumero;
             }
 
-            // 2. Extraer Bloques de Productos ("Descripción" ... "Cantidad a comprar" ... "Precio")
-            let sprItems = [];
+            // 2. Extraer TODOS los números con formato "X,XXXXXX" (Cantidad o Precio de Comprar)
+            // Se usa 2 a 6 decimales por seguridad, aunque la cantidad siempre viene con 6 (ej: 5,000000)
+            const regexNumeros = /(?:\b|\s)(\d{1,6}(?:\.\d{3})*,\d{2,6})(?=\s|$|[a-z])/g;
+            let allMatches = [...fullText.matchAll(regexNumeros)];
             
-            // Intento 1: Separar inteligentemente por el código de ítem estándar de COMPRAR (Ej: 2.1.1-541.137)
-            // Esto divide el PDF en bloques garantizando que la descripción y la cantidad del producto queden juntas
-            let itemBlocks = fullText.split(/(?=\b\d+\.\d+\.\d+-)/);
-            
-            if (itemBlocks.length > 1) {
-                for (let i = 1; i < itemBlocks.length; i++) {
-                    let block = itemBlocks[i].substring(0, 400); // Tomar los primeros 400 caracteres del renglón para no mezclar con otro producto
-                    
-                    // Buscar la cantidad. En Comprar.gob.ar la cantidad suele ser el primer número grande con decimales antes de la unidad.
-                    let qtyMatch = block.match(/([0-9]{1,6}(?:\.[0-9]{3})*,\d{2,6})\s*(?:UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?|KILO(?:S)?|GRAMO(?:S)?|GR)/i);
-                    
-                    // Si el PDF partió la unidad de medida y la mandó lejos, buscamos solo el número con 6 decimales típicos (ej: 5,000000)
-                    if (!qtyMatch) {
-                        qtyMatch = block.match(/([0-9]{1,6}(?:\.[0-9]{3})*,\d{6})/);
-                    }
-                    
-                    if (qtyMatch) {
-                        let qty = parseFloat(qtyMatch[1].replace(/\./g, '').replace(',', '.'));
-                        sprItems.push({ context: block.toLowerCase(), qty: qty, assigned: false });
-                    }
-                }
-            }
+            let sprNumbers = allMatches.map(m => ({
+                val: parseFloat(m[1].replace(/\./g, '').replace(',', '.')),
+                index: m.index,
+                used: false
+            }));
 
-            // Intento 2 (Respaldo): Si no se encontraron códigos 2.1.1- (a veces las SPR cambian), buscar libremente en todo el texto
-            if (sprItems.length === 0) {
-                const qtyRegex = /([0-9]{1,6}(?:\.[0-9]{3})*,\d{2,6})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?|KILO(?:S)?|GRAMO(?:S)?|GR)/gi;
-                let matches = [...fullText.matchAll(qtyRegex)];
-                matches.forEach(match => {
-                    let qty = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-                    let start = Math.max(0, match.index - 300);
-                    let context = fullText.substring(start, match.index + 50).toLowerCase();
-                    sprItems.push({ context: context, qty: qty, assigned: false });
-                });
-            }
-
-            // 3. Cruce de datos (Fuzzy Match)
+            // 3. Cruzar datos leyendo la tabla de la interfaz y buscando su texto en el PDF
             const inputs = document.querySelectorAll('.spr-input-cant');
             let matchedCount = 0;
 
@@ -594,32 +567,45 @@
                 const tr = input.closest('tr');
                 const prodName = tr.querySelector('td').innerText.toLowerCase();
                 
-                // Dividimos el nombre de la OC en palabras clave de al menos 3 letras (para incluir cosas cortas como PAN, AJO, etc)
-                let pWords = prodName.match(/[a-z0-9áéíóúñ]{3,}/g) || [];
-                const ignoreWords = ['peso', 'argentino', 'unidad', 'dólar', 'ver', 'más', 'mas', 'total', 'con', 'del', 'los', 'las', 'por', 'para', 'tipo'];
-                pWords = pWords.filter(w => !ignoreWords.includes(w));
+                // Dividimos la descripción que tenés en pantalla en palabras clave
+                let pWordsRaw = prodName.match(/[a-z0-9áéíóúñ]{4,}/g) || [];
+                // Ignorar palabras genéricas para no tener falsos positivos
+                const ignoreWords = ['peso', 'argentino', 'unidad', 'dólar', 'total', 'tipo', 'corte', 'especie', 'presentacion', 'detalle', 'para'];
+                let pWords = [...new Set(pWordsRaw.filter(w => !ignoreWords.includes(w)))];
                 
-                let bestMatch = null;
-                let maxMatches = 0;
-                
-                for(let item of sprItems) {
-                    if(item.assigned) continue;
-                    let matchesCount = 0;
+                if (pWords.length === 0) return;
+
+                let bestNums = [];
+
+                sprNumbers.forEach(num => {
+                    if (num.used) return;
                     
+                    // Armamos una ventana de texto alrededor del número encontrado
+                    let start = Math.max(0, num.index - 300);
+                    let end = Math.min(fullText.length, num.index + 300);
+                    let context = fullText.substring(start, end);
+                    
+                    // ¿Cuántas palabras del producto están cerca de este número?
+                    let score = 0;
                     pWords.forEach(w => {
-                        if (item.context.includes(w)) matchesCount++;
+                        if (context.includes(w)) score++;
                     });
-                    
-                    if(matchesCount > maxMatches) {
-                        maxMatches = matchesCount;
-                        bestMatch = item;
+
+                    // Si hay coincidencia sólida, lo guardamos como candidato
+                    if (score >= 2 || (pWords.length === 1 && score === 1)) {
+                        bestNums.push({ num: num, score: score });
                     }
-                }
-                
-                // Si encontramos al menos 2 palabras iguales, o 1 si el producto tiene muy pocas palabras
-                if(bestMatch && (maxMatches >= 2 || (pWords.length <= 2 && maxMatches >= 1))) {
-                    input.value = bestMatch.qty;
-                    bestMatch.assigned = true;
+                });
+
+                if (bestNums.length > 0) {
+                    // Si encontró varios candidatos (ej: cantidad y precio juntos), 
+                    // los ordena por mayor coincidencia de palabras. 
+                    // Si empatan, se queda con el que apareció primero en el PDF (que en Comprar siempre es la Cantidad a Pedir).
+                    bestNums.sort((a, b) => b.score - a.score || a.num.index - b.num.index);
+                    
+                    let best = bestNums[0].num;
+                    input.value = best.val;
+                    best.used = true; // Lo marcamos usado para que el siguiente producto no lo robe
                     input.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); 
                     matchedCount++;
                 }
@@ -628,7 +614,7 @@
             if (matchedCount > 0) {
                 showToast(`¡Éxito! Se autocompletaron ${matchedCount} cantidades cruzando datos con la OC.`, "success");
             } else if (sprNumero) {
-                showToast("Se cargó Nro y Fecha, pero no se encontraron productos compatibles para rellenar.", "warning");
+                showToast("Se cargó Nro y Fecha, pero no se encontraron cantidades compatibles para rellenar.", "warning");
             } else {
                 showToast("No se pudo detectar el formato de la SPR.", "error");
             }
