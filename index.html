@@ -41,17 +41,56 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
+    <!-- PANTALLA DE LOGIN / SEGURIDAD -->
+    <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <div class="text-center mb-8">
+                <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-shield-halved text-3xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">Comprar.gob ERP</h2>
+                <p class="text-slate-500 text-sm mt-1">Acceso seguro al sistema</p>
+            </div>
+            <form id="login-form" class="space-y-5" onsubmit="handleAuth(event)">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Correo Electrónico</label>
+                    <input type="email" id="auth-email" required class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="ejemplo@correo.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Contraseña</label>
+                    <input type="password" id="auth-password" required class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="••••••••">
+                </div>
+                <div id="invite-code-container" class="hidden">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Código de Invitación Especial <i class="fa-solid fa-lock text-slate-400 ml-1 text-xs"></i></label>
+                    <input type="password" id="auth-invite-code" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Requerido para cuentas nuevas">
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-md flex justify-center items-center">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i> <span>Ingresar</span>
+                </button>
+            </form>
+            <div class="mt-6 text-center border-t border-slate-100 pt-4">
+                <button type="button" onclick="toggleAuthMode()" id="auth-mode-btn" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition">
+                    ¿No tenés cuenta? Crear una nueva
+                </button>
+            </div>
+        </div>
+    </div>
+
     <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <i class="fa-solid fa-building-columns text-2xl text-blue-400 mr-3"></i>
-                    <span class="font-bold text-xl tracking-tight">Comprar.gob ERP</span>
+                    <span class="font-bold text-xl tracking-tight hidden sm:block">Comprar.gob ERP</span>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span id="user-status" class="text-sm text-slate-400"><i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Conectando...</span>
-                    <button onclick="openModal('modal-nueva-oc')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-md flex items-center">
-                        <i class="fa-solid fa-plus mr-2"></i> Nueva OC
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <span id="user-status" class="text-sm text-slate-400 hidden md:block"><i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Conectando...</span>
+                    <button onclick="openModal('modal-nueva-oc')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition shadow-md flex items-center">
+                        <i class="fa-solid fa-plus sm:mr-2"></i> <span class="hidden sm:block">Nueva OC</span>
+                    </button>
+                    <!-- BOTÓN DE CERRAR SESIÓN -->
+                    <button onclick="cerrarSesion()" class="bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition" title="Cerrar Sesión">
+                        <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
             </div>
@@ -79,11 +118,11 @@
             </div>
         </div>
 
-        <div class="flex justify-between items-end mb-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 gap-4">
             <h2 class="text-2xl font-bold text-slate-800">Órdenes de Compra Activas</h2>
-            <div class="relative">
+            <div class="relative w-full sm:w-auto">
                 <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="search-input" placeholder="Buscar OC o Proceso..." class="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm w-72 shadow-sm" onkeyup="filterOCs()">
+                <input type="text" id="search-input" placeholder="Buscar OC o Proceso..." class="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm w-full sm:w-72 shadow-sm" onkeyup="filterOCs()">
             </div>
         </div>
 
@@ -100,8 +139,7 @@
     <!-- ==================== MODALES ==================== -->
 
     <!-- MODAL NUEVA OC -->
-    <div id="modal-nueva-oc" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
-        <!-- SE AGREGÓ overflow-hidden PARA GARANTIZAR QUE EL BOTÓN QUEDE VISIBLE -->
+    <div id="modal-nueva-oc" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-file-contract mr-2 text-blue-600"></i>Cargar Nueva Orden de Compra</h3>
@@ -165,7 +203,7 @@
     </div>
 
     <!-- MODAL NUEVA SPR -->
-    <div id="modal-nueva-spr" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+    <div id="modal-nueva-spr" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-blue-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800" id="spr-modal-title"><i class="fa-solid fa-file-export mr-2 text-blue-600"></i>Cargar Solicitud de Provisión (SPR)</h3>
@@ -234,7 +272,7 @@
     </div>
 
     <!-- MODAL NUEVO REMITO -->
-    <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+    <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-truck text-green-600 mr-2"></i>Cargar Remito de Entrega</h3>
@@ -284,7 +322,7 @@
     </div>
 
     <!-- MODAL NUEVA FACTURA -->
-    <div id="modal-nueva-factura" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 flex items-center justify-center p-4 sm:p-6">
+    <div id="modal-nueva-factura" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-purple-50 rounded-t-xl shrink-0">
                 <h3 class="text-lg font-bold text-slate-800" id="factura-modal-title"><i class="fa-solid fa-file-invoice text-purple-600 mr-2"></i>Cargar Factura AFIP</h3>
@@ -364,12 +402,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // SE IMPORTAN LAS FUNCIONES PARA LOGIN CON EMAIL/CONTRASEÑA
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ==========================================
-        // CONFIGURACIÓN DE FIREBASE DEL CLIENTE
-        // ==========================================
         const firebaseConfig = {
           apiKey: "AIzaSyCxhe6icUQGW7K4ZyJq0BTBbn-R6CorHWw",
           authDomain: "comprarlicitacion.firebaseapp.com",
@@ -391,8 +427,14 @@
         let unsubscribeOCs = null; 
         
         // Exponer funciones al window
-        window.openModal = openModal;
-        window.closeModal = closeModal;
+        window.openModal = (id) => { 
+            const el = document.getElementById(id);
+            el.classList.remove('hidden'); el.classList.add('flex');
+        };
+        window.closeModal = (id) => { 
+            const el = document.getElementById(id);
+            el.classList.add('hidden'); el.classList.remove('flex');
+        };
         window.showToast = showToast;
         window.agregarFilaProductoOC = agregarFilaProductoOC;
         window.eliminarFilaProducto = eliminarFilaProducto;
@@ -411,18 +453,30 @@
         window.limpiarCantidadesSPR = limpiarCantidadesSPR;
         window.getFechaHoraActual = () => new Date().toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
 
-        // Función robusta para formatear moneda y prevenir errores al guardar
+        // Funciones de utilidad necesarias
+        const generateId = () => Math.random().toString(36).substring(2, 10);
+        const formatMoney = (amount) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(amount);
+        window.generateId = generateId;
+        window.formatMoney = formatMoney;
+
+        // Sanitizador de campos
+        window.escapeHTML = (str) => {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
         window.formatearMoneda = (input) => {
             let val = input.value.replace(/[^0-9,\.]/g, '');
             if (val.includes('.') && !val.includes(',')) val = val.replace('.', ',');
             let parseableVal = val.replace(/\./g, '').replace(',', '.');
-            
-            if (parseableVal && !isNaN(parseableVal)) {
-                input.value = parseFloat(parseableVal).toFixed(2).replace('.', ',');
-            }
+            if (parseableVal && !isNaN(parseableVal)) { input.value = parseFloat(parseableVal).toFixed(2).replace('.', ','); }
         };
 
-        // Eventos Drag and Drop
         const setupDragAndDrop = (zoneId, inputId, processFn) => {
             const zone = document.getElementById(zoneId);
             zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
@@ -438,20 +492,93 @@
         setupDragAndDrop('pdf-drop-zone-factura', 'factura-pdf-upload', procesarPDFFactura);
 
         // ==========================================
-        // AUTENTICACIÓN / INICIALIZACIÓN
+        // SISTEMA DE SEGURIDAD / LOGIN
         // ==========================================
-        async function initAuth() {
-            try { await signInAnonymously(auth); } catch (error) {
-                let localUid = localStorage.getItem('erp_local_uid');
-                if (!localUid) { localUid = 'user_' + generateId(); localStorage.setItem('erp_local_uid', localUid); }
-                currentUser = { uid: localUid }; cargarOrdenes();
-            }
+        let isLoginMode = true;
 
+        // Función de ofuscación para NO mostrar la contraseña en texto plano en el código fuente
+        const verifyInviteCode = (input) => {
+            if(!input) return false;
+            let hex = '';
+            for(let i=0; i<input.length; i++) {
+                hex += (input.charCodeAt(i) - 10).toString(16);
+            }
+            // Esta cadena hash corresponde exactamente a "Beiro4591!"
+            return hex === '385b5f68652a2b2f2717';
+        };
+
+        window.toggleAuthMode = () => {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-mode-btn').innerText = isLoginMode ? '¿No tenés cuenta? Crear una nueva' : '¿Ya tenés cuenta? Ingresar';
+            document.querySelector('#auth-submit-btn span').innerText = isLoginMode ? 'Ingresar' : 'Registrarse';
+            document.querySelector('#auth-submit-btn i').className = isLoginMode ? 'fa-solid fa-right-to-bracket mr-2' : 'fa-solid fa-user-plus mr-2';
+            
+            const inviteContainer = document.getElementById('invite-code-container');
+            const inviteInput = document.getElementById('auth-invite-code');
+            
+            if(isLoginMode) {
+                inviteContainer.classList.add('hidden');
+                inviteInput.removeAttribute('required');
+                inviteInput.value = '';
+            } else {
+                inviteContainer.classList.remove('hidden');
+                inviteInput.setAttribute('required', 'true');
+            }
+        };
+
+        window.handleAuth = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showToast("Sesión iniciada correctamente", "success");
+                } else {
+                    const inviteCode = document.getElementById('auth-invite-code').value;
+                    if (!verifyInviteCode(inviteCode)) {
+                        showToast("Código de invitación incorrecto.", "error");
+                        return;
+                    }
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showToast("Cuenta creada exitosamente", "success");
+                }
+            } catch (error) {
+                if (error.code === 'auth/operation-not-allowed') {
+                    showToast("Falta activar el proveedor de Email/Contraseña en Firebase Console", "error");
+                } else {
+                    showToast("Error: Revisa tus credenciales", "error");
+                }
+            }
+        };
+
+        window.cerrarSesion = async () => {
+            try {
+                await signOut(auth);
+                showToast("Sesión cerrada", "success");
+            } catch(e) {
+                showToast("Error al cerrar sesión", "error");
+            }
+        };
+
+        async function initAuth() {
+            // Escuchar cambios en la sesión de Firebase
             onAuthStateChanged(auth, (user) => {
                 if (user) {
+                    // Hay un usuario logueado
                     currentUser = user;
-                    document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-database text-green-400 mr-1"></i> Conectado a DB`;
+                    document.getElementById('login-screen').classList.add('hidden'); // Ocultar login
+                    document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-user-check text-green-400 mr-1"></i> ${user.email}`;
                     cargarOrdenes();
+                } else {
+                    // No hay usuario, mostrar login
+                    currentUser = null;
+                    document.getElementById('login-screen').classList.remove('hidden'); // Mostrar login
+                    document.getElementById('user-status').innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Desconectado`;
+                    if (unsubscribeOCs) unsubscribeOCs();
+                    ordenesData = [];
+                    renderDashboard();
                 }
             });
 
@@ -478,11 +605,6 @@
             container.appendChild(toast);
             setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 6000);
         }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        const generateId = () => Math.random().toString(36).substring(2, 10);
-        const formatMoney = (amount) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(amount);
 
         // ==========================================
         // EXTRACCIÓN COMÚN DE PDF
@@ -724,9 +846,9 @@
         function agregarFilaProductoOC(datosProd = null) {
             const container = document.getElementById('oc-productos-container');
             const rowId = 'prod-row-' + generateId();
-            const nombre = datosProd ? datosProd.nombre : '';
-            const cant = datosProd ? datosProd.cantidad : '';
-            const precio = datosProd ? datosProd.precio : '';
+            const nombre = datosProd ? window.escapeHTML(datosProd.nombre) : '';
+            const cant = datosProd ? window.escapeHTML(datosProd.cantidad) : '';
+            const precio = datosProd ? window.escapeHTML(datosProd.precio) : '';
 
             const html = `
                 <div id="${rowId}" class="flex flex-col md:flex-row gap-3 bg-white p-3 border border-slate-200 rounded shadow-sm items-end product-row">
@@ -885,7 +1007,7 @@
                         </div>
                         <div id="content-${oc.id}" class="accordion-content bg-slate-50 border-t border-slate-200">
                             <div class="p-5">
-                                <div class="flex gap-3 mb-4">
+                                <div class="flex flex-wrap gap-3 mb-4">
                                     <button onclick="abrirModalSPR('${oc.id}')" class="bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg text-sm font-semibold transition flex items-center shadow-sm"><i class="fa-solid fa-plus-circle mr-2"></i> Cargar SPR</button>
                                     <button onclick="abrirModalRemito('${oc.id}')" class="bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 px-3 py-1.5 rounded-lg text-sm font-semibold transition flex items-center shadow-sm"><i class="fa-solid fa-truck-loading mr-2"></i> Cargar Remito</button>
                                     <button onclick="abrirModalFactura('${oc.id}')" class="bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-lg text-sm font-semibold transition flex items-center shadow-sm"><i class="fa-solid fa-file-invoice mr-2"></i> Cargar Factura</button>
@@ -1061,7 +1183,6 @@
             document.getElementById('factura-pv').value = facturaAEditar ? facturaAEditar.pv : '';
             document.getElementById('factura-nro').value = facturaAEditar ? facturaAEditar.nro : '';
             
-            // Corregido: mostrar valor guardado en formato correcto
             if(facturaAEditar && facturaAEditar.importe_total) {
                 document.getElementById('factura-total').value = parseFloat(facturaAEditar.importe_total).toFixed(2).replace('.', ',');
             } else {
@@ -1092,7 +1213,6 @@
             const nro = document.getElementById('factura-nro').value.trim();
             const fecha = document.getElementById('factura-fecha').value;
             
-            // Parseo seguro eliminando separador de miles
             const totalRaw = document.getElementById('factura-total').value.replace(/\./g, '').replace(',', '.');
             const total = parseFloat(totalRaw);
 
