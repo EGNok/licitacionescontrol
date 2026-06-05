@@ -532,10 +532,16 @@
                     showToast("Cuenta creada exitosamente", "success");
                 }
             } catch (error) {
+                // Mejora en el manejo de errores para que sea visible
+                console.error("Auth Error:", error.code, error.message);
                 if (error.code === 'auth/operation-not-allowed') {
-                    showToast("Falta activar el proveedor de Email/Contraseña en Firebase Console", "error");
+                    showToast("Falta habilitar Correo/Contraseña en Firebase Console", "error");
+                } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    showToast("Error: Correo o contraseña incorrectos.", "error");
+                } else if (error.code === 'auth/email-already-in-use') {
+                    showToast("Error: Ya existe una cuenta con ese correo.", "error");
                 } else {
-                    showToast("Error: Revisa tus credenciales", "error");
+                    showToast(`Error al conectar: ${error.message}`, "error");
                 }
             }
         };
