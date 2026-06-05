@@ -478,8 +478,25 @@
         }
 
         window.showToast = showToast;
+        
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.querySelector(`.id-chevron-${id}`);
+            if (content && content.classList.contains('open')) { 
+                content.classList.remove('open'); 
+                if (icon) icon.style.transform = 'rotate(0deg)'; 
+            } else if (content) { 
+                content.classList.add('open'); 
+                if (icon) icon.style.transform = 'rotate(180deg)'; 
+            }
+        }
         window.toggleAccordion = toggleAccordion;
+
+        function filterOCs() {
+            renderDashboard();
+        }
         window.filterOCs = filterOCs;
+
         window.getFechaHoraActual = () => new Date().toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
 
         // ==========================================
@@ -532,7 +549,6 @@
                     showToast("Cuenta creada exitosamente", "success");
                 }
             } catch (error) {
-                // Mejora en el manejo de errores para que sea visible
                 console.error("Auth Error:", error.code, error.message);
                 if (error.code === 'auth/operation-not-allowed') {
                     showToast("Falta habilitar Correo/Contraseña en Firebase Console", "error");
