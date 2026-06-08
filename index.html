@@ -41,7 +41,6 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- PANTALLA DE LOGIN / SEGURIDAD -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4">
             <div class="text-center mb-8">
@@ -88,7 +87,6 @@
                     <button onclick="openModal('modal-nueva-oc')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition shadow-md flex items-center">
                         <i class="fa-solid fa-plus sm:mr-2"></i> <span class="hidden sm:block">Nueva OC</span>
                     </button>
-                    <!-- BOTÓN DE CERRAR SESIÓN -->
                     <button onclick="cerrarSesion()" class="bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition" title="Cerrar Sesión">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
@@ -98,7 +96,6 @@
     </nav>
 
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Dashboard Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="dashboard-stats">
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-center">
                 <div class="rounded-full bg-blue-100 p-3 mr-4"><i class="fa-solid fa-file-invoice-dollar text-blue-600 text-xl"></i></div>
@@ -136,7 +133,6 @@
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2"></div>
 
-    <!-- MODAL NUEVA OC -->
     <div id="modal-nueva-oc" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6 transition-opacity">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl shrink-0">
@@ -145,11 +141,10 @@
             </div>
             
             <div class="p-6 overflow-y-auto flex-grow flex flex-col lg:flex-row gap-6">
-                <!-- Zona Importación -->
                 <div class="lg:w-1/4 flex flex-col space-y-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <h4 class="font-bold text-blue-800 mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Importación Automática</h4>
-                        <p class="text-xs text-blue-600 mb-4">Subí el PDF original de Comprar.gob.ar para extraer los Renglones.</p>
+                        <p class="text-xs text-blue-600 mb-4">Subí el PDF original de Comprar.gob.ar para extraer los Códigos de Ítem.</p>
                         
                         <div id="pdf-drop-zone" class="drop-zone rounded-lg p-6 text-center cursor-pointer bg-white" onclick="document.getElementById('oc-pdf-upload').click()">
                             <i class="fa-regular fa-file-pdf text-3xl text-slate-400 mb-2 pointer-events-none"></i>
@@ -163,7 +158,6 @@
                     </div>
                 </div>
 
-                <!-- Formulario -->
                 <div class="lg:w-3/4 border-l border-slate-200 pl-0 lg:pl-6">
                     <form id="form-nueva-oc" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -200,7 +194,6 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVA SPR -->
     <div id="modal-nueva-spr" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6 transition-opacity">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-blue-50 rounded-t-xl shrink-0">
@@ -211,8 +204,8 @@
             <div class="p-6 overflow-y-auto flex-grow flex flex-col lg:flex-row gap-6">
                 <div class="lg:w-1/4 flex flex-col space-y-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h4 class="font-bold text-blue-800 mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Cruce por Renglón</h4>
-                        <p class="text-xs text-blue-600 mb-4">Subí el PDF de la SPR. El sistema buscará el Número de Renglón y cruzará las cantidades exactas.</p>
+                        <h4 class="font-bold text-blue-800 mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Cruce Inteligente</h4>
+                        <p class="text-xs text-blue-600 mb-4">Subí el PDF de la SPR. El sistema cazará los Códigos de Catálogo para garantizar un cruce perfecto.</p>
                         
                         <div id="pdf-drop-zone-spr" class="drop-zone rounded-lg p-6 text-center cursor-pointer bg-white" onclick="document.getElementById('spr-pdf-upload').click()">
                             <i class="fa-regular fa-file-pdf text-3xl text-slate-400 mb-2 pointer-events-none"></i>
@@ -221,7 +214,7 @@
                         </div>
                         <div id="pdf-loading-spr" class="hidden text-center py-4">
                             <i class="fa-solid fa-circle-notch fa-spin text-blue-500 mb-2"></i>
-                            <p class="text-xs text-slate-600">Cruzando renglones...</p>
+                            <p class="text-xs text-slate-600">Cruzando códigos...</p>
                         </div>
                     </div>
                 </div>
@@ -251,7 +244,6 @@
                         <table class="min-w-full divide-y divide-slate-200">
                             <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase">Renglón</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Producto Adjudicado</th>
                                     <th class="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Total OC</th>
                                     <th class="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Pendiente</th>
@@ -270,7 +262,6 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVO REMITO -->
     <div id="modal-nuevo-remito" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6 transition-opacity">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-green-50 rounded-t-xl shrink-0">
@@ -321,7 +312,6 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVA FACTURA -->
     <div id="modal-nueva-factura" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden z-50 items-center justify-center p-4 sm:p-6 transition-opacity">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-purple-50 rounded-t-xl shrink-0">
@@ -330,7 +320,6 @@
             </div>
             
             <div class="p-6 overflow-y-auto flex-grow flex flex-col md:flex-row gap-6">
-                <!-- Zona Importación AFIP -->
                 <div class="md:w-1/3 flex flex-col space-y-4">
                     <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                         <h4 class="font-bold text-purple-800 mb-2 text-sm"><i class="fa-solid fa-qrcode mr-2"></i>Lector de AFIP</h4>
@@ -348,7 +337,6 @@
                     </div>
                 </div>
 
-                <!-- Formulario Factura -->
                 <div class="md:w-2/3 border-l border-slate-200 pl-0 md:pl-6">
                     <input type="hidden" id="factura-oc-id">
                     <div class="mb-4 bg-slate-100 p-3 rounded-lg flex items-center">
@@ -432,7 +420,6 @@
         window.generateId = generateId;
         window.formatMoney = formatMoney;
 
-        // Sanitizador de campos para evitar problemas con comillas y HTML en los inputs
         window.escapeHTML = (str) => {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -491,16 +478,11 @@
             }
         }
         window.toggleAccordion = toggleAccordion;
-
-        function filterOCs() {
-            renderDashboard();
-        }
-        window.filterOCs = filterOCs;
-
+        window.filterOCs = () => renderDashboard();
         window.getFechaHoraActual = () => new Date().toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
 
         // ==========================================
-        // SISTEMA DE SEGURIDAD / LOGIN (Ofuscado)
+        // SISTEMA DE SEGURIDAD / LOGIN
         // ==========================================
         let isLoginMode = true;
 
@@ -508,7 +490,7 @@
             if(!input) return false;
             let hex = '';
             for(let i=0; i<input.length; i++) { hex += (input.charCodeAt(i) - 10).toString(16); }
-            return hex === '385b5f68652a2b2f2717'; // Equivalente ofuscado de "Beiro4591!"
+            return hex === '385b5f68652a2b2f2717'; 
         };
 
         window.toggleAuthMode = () => {
@@ -563,12 +545,8 @@
         };
 
         window.cerrarSesion = async () => {
-            try {
-                await signOut(auth);
-                showToast("Sesión cerrada", "success");
-            } catch(e) {
-                showToast("Error al cerrar sesión", "error");
-            }
+            try { await signOut(auth); showToast("Sesión cerrada", "success"); } 
+            catch(e) { showToast("Error al cerrar sesión", "error"); }
         };
 
         async function initAuth() {
@@ -595,7 +573,7 @@
         }
 
         // ==========================================
-        // FUNCIONES PDF (DRAG & DROP Y EXTRACCIÓN)
+        // FUNCIONES DE EXTRACCIÓN (NUEVO MOTOR)
         // ==========================================
         const setupDragAndDrop = (zoneId, inputId, processFn) => {
             const zone = document.getElementById(zoneId);
@@ -637,6 +615,18 @@
             return lines;
         }
 
+        // Extrae los bloques donde está el Código de Catálogo (ancla inquebrantable)
+        function extractRowsByAnchor(fullText) {
+            const rowStartRegex = /(?:\b|^)([2345]\.\d\.\d-\s*(?:\d+\s+)?[\d.]+)/g;
+            let match;
+            let rowIndexes = [];
+            while ((match = rowStartRegex.exec(fullText)) !== null) {
+                let codigoLimpio = match[1].replace(/\s+/g, '');
+                rowIndexes.push({ codigo: codigoLimpio, index: match.index, matchText: match[0] });
+            }
+            return rowIndexes;
+        }
+
         async function procesarPDF(event) {
             const file = event.target.files[0];
             if (!file || file.type !== 'application/pdf') return;
@@ -650,6 +640,7 @@
             } catch (e) {} finally {
                 document.getElementById('pdf-drop-zone').classList.remove('hidden');
                 document.getElementById('pdf-loading').classList.add('hidden');
+                event.target.value = '';
             }
         }
 
@@ -664,43 +655,40 @@
             let descMatch = fullText.match(/Descripción:\s*(.*?)\s*(?:Ejercicio|Fecha Autorización)/i);
             if (descMatch) ocDesc = descMatch[1].trim();
 
-            let inTable = false; let productos = []; let currentRow = null;
+            let productos = [];
+            let rowIndexes = extractRowsByAnchor(fullText);
 
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim();
+            for (let j = 0; j < rowIndexes.length; j++) {
+                let start = rowIndexes[j].index + rowIndexes[j].matchText.length;
+                let end = (j + 1 < rowIndexes.length) ? rowIndexes[j+1].index : fullText.length;
+                let rowText = fullText.substring(start, end);
                 
-                if (line.includes("Precio Total") || line.includes("Número renglón")) { inTable = true; continue; }
-                if (line.includes("Total de la Orden de Compra") || line.includes("Documento de Clausulas")) { inTable = false; if (currentRow) { productos.push(currentRow); currentRow = null; } continue; }
-
-                if (inTable) {
-                    // Extraemos el número de renglón (primer grupo)
-                    let rowStartRegex = /^(\d+)\s+(\d+)\s+([\d.-]+)\s+(.*)/;
-                    let startMatch = line.match(rowStartRegex);
-
-                    if (startMatch) {
-                        if (currentRow) { productos.push(currentRow); }
-                        
-                        // Guardamos el número de renglón extraído
-                        currentRow = { renglon: startMatch[1], nombre: "", cantidad: 0, precio: 0 };
-                        
-                        const dataRegex = /([0-9]{1,3}(?:\.[0-9]{3})*,\d{2})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?)\s+(?:Ver Detalle\s*)?(.*?)\s*([0-9]{1,3}(?:\.[0-9]{3})*,\d{2})\s+(?:Peso|ARS|Dólar)/i;
-                        let dataMatch = line.match(dataRegex);
-                        if (dataMatch) {
-                            currentRow.cantidad = parseFloat(dataMatch[1].replace(/\./g, '').replace(',', '.'));
-                            currentRow.precio = parseFloat(dataMatch[4].replace(/\./g, '').replace(',', '.'));
-                            let cleanLine = line.replace(startMatch[1] + " " + startMatch[2] + " " + startMatch[3], "").replace(dataMatch[0], "").replace(/[0-9]{1,3}(?:\.[0-9]{3})*,\d{2}$/, "").replace(/Ver Detalle/gi, "").trim();
-                            currentRow.nombre = (cleanLine + " " + (dataMatch[3] ? dataMatch[3] : "")).trim();
-                        } else { currentRow.nombre = startMatch[4]; }
-                    } else if (currentRow) {
-                        let cleanLine = line.replace(/^[\d.-]+\s+/, '').replace(/(?:Peso|Argentino|Dólar|Estadounidense)/gi, '').trim();
-                        if (cleanLine) currentRow.nombre += " " + cleanLine;
-                    }
+                let tableEndMatch = rowText.match(/Total de la Orden|Total Adjudicado|Documento de Clausulas|Autorizador\/es/i);
+                if (tableEndMatch) rowText = rowText.substring(0, tableEndMatch.index);
+                
+                // Intenta pescar el número de Renglón deduciendo lo que hay antes del código
+                let preText = fullText.substring(Math.max(0, rowIndexes[j].index - 30), rowIndexes[j].index);
+                let renglonMatch = preText.match(/\b(\d+)\s*(?:1|0)?\s*$/);
+                let renglon = renglonMatch ? renglonMatch[1] : (j + 1).toString();
+                
+                let cantMatch = rowText.match(/(\d{1,6}(?:\.\d{3})*,\d{2,6})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?|RACION(?:ES)?|BOLS(?:A|AS)|LAT(?:A|AS)|FRASCO(?:S)?|SACHET(?:S)?|KILO(?:S)?)/i);
+                let unitPriceMatch = rowText.match(/(\d{1,6}(?:\.\d{3})*,\d{2,6})\s+(?:Peso|ARS|Dólar)/i);
+                
+                let nombre = rowText; let cantidad = 0; let precio = 0;
+                
+                if (cantMatch) {
+                    nombre = rowText.substring(0, cantMatch.index);
+                    cantidad = parseFloat(cantMatch[1].replace(/\./g, '').replace(',', '.'));
                 }
+                if (unitPriceMatch) precio = parseFloat(unitPriceMatch[1].replace(/\./g, '').replace(',', '.'));
+                
+                nombre = nombre.replace(/Ver Detalle/gi, "").replace(/\s{2,}/g, ' ').trim();
+                nombre = nombre.replace(/^[,";\s]+/, '').replace(/[,";\s]+$/, '');
+                if (!nombre) nombre = "Producto extraído";
+                
+                if (cantidad > 0) productos.push({ renglon, codigo_item: rowIndexes[j].codigo, nombre, cantidad, precio });
             }
-            if (currentRow) { productos.push(currentRow); }
 
-            productos.forEach(p => { p.nombre = p.nombre.replace(/\s{2,}/g, ' ').trim(); if (!p.nombre) p.nombre = "Producto extraído (Revisar)"; });
-            
             if(ocNumero) document.getElementById('oc-numero').value = ocNumero;
             if(ocProceso) document.getElementById('oc-proceso').value = ocProceso;
             if(ocDesc) document.getElementById('oc-descripcion').value = ocDesc;
@@ -708,8 +696,8 @@
             if (productos.length > 0) {
                 document.getElementById('oc-productos-container').innerHTML = '';
                 productos.forEach(p => agregarFilaProductoOC(p));
-                showToast(`¡Éxito! Se extrajeron ${productos.length} renglones de la OC.`, "success");
-            }
+                showToast(`Se extrajeron ${productos.length} renglones de la OC.`, "success");
+            } else { showToast("No se detectaron productos en la OC.", "warning"); }
         }
 
         async function procesarPDFSPR(event) {
@@ -726,6 +714,7 @@
             finally {
                 document.getElementById('pdf-drop-zone-spr').classList.remove('hidden');
                 document.getElementById('pdf-loading-spr').classList.add('hidden');
+                event.target.value = '';
             }
         }
 
@@ -740,36 +729,28 @@
             if (dateMatch) document.getElementById('spr-fecha').value = `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`;
             if (sprNumero) document.getElementById('spr-numero').value = sprNumero;
 
-            let inTable = false;
-            let sprRenglones = {}; 
+            let sprRenglonesByCodigo = {};
+            let sprRenglonesByRenglon = {};
+            
+            let rowIndexes = extractRowsByAnchor(fullText);
 
-            // Buscamos renglón exacto y cantidad
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim();
+            for (let j = 0; j < rowIndexes.length; j++) {
+                let start = rowIndexes[j].index + rowIndexes[j].matchText.length;
+                let end = (j + 1 < rowIndexes.length) ? rowIndexes[j+1].index : fullText.length;
+                let rowText = fullText.substring(start, end);
                 
-                if (line.includes("Precio total") || line.includes("Número renglón")) { inTable = true; continue; }
-                if (line.includes("Autorizador/es") || line.includes("Importe total")) { inTable = false; continue; }
-
-                if (inTable) {
-                    // Captura estándar: "18 1 2.1.1-6546.1 VERDURAS... 2335,000000 UNIDAD..."
-                    let rowMatch = line.match(/^(\d+)\s+\d+\s+[\d.-]+\s+.*?\s+(\d{1,6}(?:\.\d{3})*,\d{2,6})\s+(?:UNIDAD|KILOGRAMO|LITRO)/i);
+                let tableEndMatch = rowText.match(/Importe total|Autorizador\/es|Volver Ir al escritorio/i);
+                if (tableEndMatch) rowText = rowText.substring(0, tableEndMatch.index);
+                
+                let cantMatch = rowText.match(/(\d{1,6}(?:\.\d{3})*,\d{2,6})\s+(UNIDAD(?:ES)?|KILOGRAMO(?:S)?|KG|LITRO(?:S)?|L|ENVASE(?:S)?|CAJA(?:S)?|PAQUETE(?:S)?|RESMA(?:S)?|PAR(?:ES)?|METRO(?:S)?|HOJA(?:S)?|DOCENA(?:S)?|RACION(?:ES)?|BOLS(?:A|AS)|LAT(?:A|AS)|FRASCO(?:S)?|SACHET(?:S)?|KILO(?:S)?)/i);
+                
+                if (cantMatch) {
+                    let cantidad = parseFloat(cantMatch[1].replace(/\./g, '').replace(',', '.'));
+                    sprRenglonesByCodigo[rowIndexes[j].codigo] = cantidad;
                     
-                    if (rowMatch) {
-                        let numeroRenglon = rowMatch[1];
-                        let cantidad = parseFloat(rowMatch[2].replace(/\./g, '').replace(',', '.'));
-                        sprRenglones[numeroRenglon] = cantidad;
-                    } else {
-                        // Fallback: A veces el PDF corta la línea. Buscamos el inicio del renglón (ej: "18 1")
-                        let startRenglonMatch = line.match(/^(\d+)\s+1\s+2\.1\.1/);
-                        if(startRenglonMatch) {
-                             let reng = startRenglonMatch[1];
-                             let contextText = line + " " + (lines[i+1] || "") + " " + (lines[i+2] || "");
-                             let cantMatch = contextText.match(/(\d{1,6}(?:\.\d{3})*,\d{2,6})\s+(?:UNIDAD|KILOGRAMO|LITRO)/i);
-                             if(cantMatch) {
-                                sprRenglones[reng] = parseFloat(cantMatch[1].replace(/\./g, '').replace(',', '.'));
-                             }
-                        }
-                    }
+                    let preText = fullText.substring(Math.max(0, rowIndexes[j].index - 30), rowIndexes[j].index);
+                    let renglonMatch = preText.match(/\b(\d+)\s*(?:1|0)?\s*$/);
+                    if (renglonMatch) sprRenglonesByRenglon[renglonMatch[1]] = cantidad;
                 }
             }
 
@@ -777,19 +758,23 @@
             let matchedCount = 0;
 
             inputs.forEach(input => {
+                const codigoAsociado = input.getAttribute('data-codigo');
                 const renglonAsociado = input.getAttribute('data-renglon');
-                if (renglonAsociado && sprRenglones[renglonAsociado]) {
-                    input.value = sprRenglones[renglonAsociado];
+                
+                if (codigoAsociado && sprRenglonesByCodigo[codigoAsociado]) {
+                    input.value = sprRenglonesByCodigo[codigoAsociado];
+                    input.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); 
+                    matchedCount++;
+                } else if (renglonAsociado && sprRenglonesByRenglon[renglonAsociado]) {
+                    // Fallback para OC antiguas que no tenían código extraído
+                    input.value = sprRenglonesByRenglon[renglonAsociado];
                     input.classList.add('bg-green-100', 'border-green-500', 'text-green-800'); 
                     matchedCount++;
                 }
             });
 
-            if (matchedCount > 0) {
-                showToast(`Match exacto por renglón: Se autocompletaron ${matchedCount} cantidades.`, "success");
-            } else {
-                showToast("No se encontraron coincidencias exactas de renglón en la tabla.", "warning");
-            }
+            if (matchedCount > 0) showToast(`Se cruzaron ${matchedCount} productos exactamente.`, "success");
+            else showToast("No se encontraron coincidencias en la tabla.", "warning");
         }
 
         window.limpiarCantidadesSPR = () => {
@@ -800,7 +785,7 @@
 
         async function procesarPDFFactura(event) {
             const file = event.target.files[0];
-            if (!file || file.type !== 'application/pdf') return showToast("Selecciona un PDF de Factura válido.", "error");
+            if (!file || file.type !== 'application/pdf') return;
             document.getElementById('pdf-drop-zone-factura').classList.add('hidden');
             document.getElementById('pdf-loading-factura').classList.remove('hidden');
 
@@ -809,7 +794,7 @@
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 let lines = await extraeLineasPDF(pdf);
                 analizarTextoPDFFactura(lines);
-            } catch (error) { showToast("Error al leer el PDF de la Factura.", "error"); } 
+            } catch (error) {} 
             finally {
                 document.getElementById('pdf-drop-zone-factura').classList.remove('hidden');
                 document.getElementById('pdf-loading-factura').classList.add('hidden');
@@ -830,54 +815,56 @@
             if (fechaMatch) document.getElementById('factura-fecha').value = `${fechaMatch[3]}-${fechaMatch[2]}-${fechaMatch[1]}`;
 
             const regexMonedas = /(?:^|[^\d])(\d{1,3}(?:[.\s]?\d{3})*[\s]*,[\s]*\d{2})(?=[^\d]|$)/g;
-            let importes = [];
-            let match;
-            
+            let importes = []; let match;
             while ((match = regexMonedas.exec(fullText)) !== null) {
                 let cleanStr = match[1].replace(/\s+/g, '').replace(/\./g, '').replace(',', '.');
-                let valorNum = parseFloat(cleanStr);
-                importes.push(valorNum);
+                importes.push(parseFloat(cleanStr));
             }
 
             if (importes.length > 0) {
                 let total = Math.max(...importes);
                 document.getElementById('factura-total').value = total.toFixed(2).replace('.', ',');
                 showToast("¡Datos de AFIP extraídos correctamente!", "success");
-            } else {
-                showToast("Se leyeron algunos datos, cargá el total a mano.", "warning");
-            }
+            } else { showToast("Cargá el total a mano.", "warning"); }
         }
 
+        // ==========================================
+        // LÓGICA DE UI Y BASE DE DATOS
+        // ==========================================
         function agregarFilaProductoOC(datosProd = null) {
             const container = document.getElementById('oc-productos-container');
             const rowId = 'prod-row-' + generateId();
             
-            // Carga de Renglón, Nombre, Cantidad y Precio
             const renglon = datosProd && datosProd.renglon ? window.escapeHTML(datosProd.renglon) : '';
+            const codigo = datosProd && datosProd.codigo_item ? window.escapeHTML(datosProd.codigo_item) : '';
             const nombre = datosProd ? window.escapeHTML(datosProd.nombre) : '';
             const cant = datosProd ? window.escapeHTML(datosProd.cantidad) : '';
             const precio = datosProd ? window.escapeHTML(datosProd.precio) : '';
 
             const html = `
-                <div id="${rowId}" class="flex flex-col md:flex-row gap-3 bg-white p-3 border border-slate-200 rounded shadow-sm items-end product-row">
-                    <div class="w-full md:w-20">
-                        <label class="text-xs text-slate-500 mb-1 block">Renglón</label>
-                        <input type="text" class="prod-renglon w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-center font-bold" placeholder="Ej: 1" value="${renglon}">
+                <div id="${rowId}" class="flex flex-col md:flex-row gap-2 bg-white p-3 border border-slate-200 rounded shadow-sm items-end product-row">
+                    <div class="w-full md:w-16">
+                        <label class="text-[10px] text-slate-500 mb-1 block">Renglón</label>
+                        <input type="text" class="prod-renglon w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-center font-bold" value="${renglon}">
+                    </div>
+                    <div class="w-full md:w-28">
+                        <label class="text-[10px] text-slate-500 mb-1 block">Cód. Catálogo</label>
+                        <input type="text" class="prod-codigo w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-center" placeholder="2.1.1-" value="${codigo}">
                     </div>
                     <div class="flex-grow">
-                        <label class="text-xs text-slate-500 mb-1 block">Descripción del Producto</label>
-                        <input type="text" class="prod-nombre w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Ej: Resmas A4" value="${nombre}">
+                        <label class="text-[10px] text-slate-500 mb-1 block">Descripción del Producto</label>
+                        <input type="text" class="prod-nombre w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" value="${nombre}">
+                    </div>
+                    <div class="w-full md:w-24">
+                        <label class="text-[10px] text-slate-500 mb-1 block">Cantidad</label>
+                        <input type="text" class="prod-cant w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-center" value="${cant}">
                     </div>
                     <div class="w-full md:w-32">
-                        <label class="text-xs text-slate-500 mb-1 block">Cant. Total</label>
-                        <input type="text" class="prod-cant w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="100" value="${cant}">
-                    </div>
-                    <div class="w-full md:w-40">
-                        <label class="text-xs text-slate-500 mb-1 block">Precio Unitario ($)</label>
-                        <input type="text" class="prod-precio w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none" placeholder="1500,50" value="${precio}">
+                        <label class="text-[10px] text-slate-500 mb-1 block">Precio Un. ($)</label>
+                        <input type="text" class="prod-precio w-full border border-slate-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-right" value="${precio}">
                     </div>
                     <button type="button" onclick="eliminarFilaProducto('${rowId}')" class="bg-red-100 text-red-600 p-2 rounded hover:bg-red-200 transition flex-shrink-0">
-                        <i class="fa-solid fa-trash"></i>
+                        <i class="fa-solid fa-trash text-sm"></i>
                     </button>
                 </div>`;
             container.insertAdjacentHTML('beforeend', html);
@@ -894,29 +881,25 @@
             if (!numero || !proceso || !descripcion) return showToast("Completá los campos principales", "error");
 
             const productRows = document.querySelectorAll('.product-row');
-            if (productRows.length === 0) return showToast("Agregá al menos un producto a la OC", "error");
+            if (productRows.length === 0) return showToast("Agregá al menos un producto", "error");
 
             const productos = [];
             for (let row of productRows) {
                 const renglon = row.querySelector('.prod-renglon').value.trim();
+                const codigo = row.querySelector('.prod-codigo').value.trim();
                 const nombre = row.querySelector('.prod-nombre').value.trim();
                 const cant = parseFloat(row.querySelector('.prod-cant').value.replace(/\./g, '').replace(',', '.'));
                 const precio = parseFloat(row.querySelector('.prod-precio').value.replace(/\./g, '').replace(',', '.'));
                 
-                if (!nombre || isNaN(cant) || isNaN(precio) || cant <= 0 || precio <= 0) return showToast("Revisá renglón, nombre, cantidad y precio", "error");
-                
-                productos.push({ id_prod: generateId(), renglon: renglon, nombre: nombre, cantidad_total: cant, precio_unitario: precio });
+                if (!nombre || isNaN(cant) || isNaN(precio) || cant <= 0 || precio <= 0) return showToast("Revisá los productos cargados", "error");
+                productos.push({ id_prod: generateId(), renglon, codigo_item: codigo, nombre, cantidad_total: cant, precio_unitario: precio });
             }
 
-            const nuevaOC = {
-                numero_oc: numero, numero_proceso: proceso, descripcion: descripcion,
-                fecha_creacion: new Date().toISOString(), productos: productos, sprs: [], remitos: [], facturas: []
-            };
+            const nuevaOC = { numero_oc: numero, numero_proceso: proceso, descripcion: descripcion, fecha_creacion: new Date().toISOString(), productos: productos, sprs: [], remitos: [], facturas: [] };
 
             try {
                 const ocId = `OC-${Date.now()}`;
-                const docRef = doc(db, 'ordenes_comprar', ocId); 
-                await setDoc(docRef, { ...nuevaOC, userId: currentUser.uid });
+                await setDoc(doc(db, 'ordenes_comprar', ocId), { ...nuevaOC, userId: currentUser.uid });
                 showToast("Orden de Compra guardada con éxito."); closeModal('modal-nueva-oc');
                 document.getElementById('form-nueva-oc').reset(); document.getElementById('oc-productos-container').innerHTML = '';
                 agregarFilaProductoOC();
@@ -924,12 +907,9 @@
         };
 
         function calcularSaldos(oc) {
-            let totalOC = 0; let totalEntregadoPlata = 0; let totalPendientePlata = 0;
-            const sprs = oc.sprs || [];
-            const remitos = oc.remitos || [];
-            const facturas = oc.facturas || [];
+            let totalOC = 0; let totalEntregadoPlata = 0; let totalPendientePlata = 0; let totalFacturado = 0;
+            const sprs = oc.sprs || []; const remitos = oc.remitos || []; const facturas = oc.facturas || [];
 
-            let totalFacturado = 0;
             facturas.forEach(f => { totalFacturado += parseFloat(f.importe_total || 0); });
 
             const productosCalculados = oc.productos.map(prod => {
@@ -947,13 +927,10 @@
         function cargarOrdenes() {
             if (!currentUser) return;
             if (unsubscribeOCs) unsubscribeOCs(); 
-
             const q = collection(db, 'ordenes_comprar');
             unsubscribeOCs = onSnapshot(q, (snapshot) => {
                 ordenesData = []; 
-                snapshot.forEach(doc => { 
-                    if(doc.data().userId === currentUser.uid) { ordenesData.push({ id: doc.id, ...doc.data() }); }
-                });
+                snapshot.forEach(doc => { if(doc.data().userId === currentUser.uid) { ordenesData.push({ id: doc.id, ...doc.data() }); } });
                 ordenesData.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion)); 
                 renderDashboard();
             });
@@ -965,19 +942,13 @@
             let html = ''; let globalAdjudicado = 0; let globalEntregado = 0; let globalPendiente = 0; let globalFacturado = 0;
 
             if (ordenesData.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-16 bg-white rounded-xl border border-dashed border-slate-300">
-                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-4"></i>
-                        <p class="text-slate-500 font-medium text-lg">No hay Órdenes de Compra cargadas.</p>
-                        <p class="text-slate-400 text-sm mt-1">Hacé clic en "Nueva OC" para comenzar a gestionar.</p>
-                    </div>`;
+                container.innerHTML = `<div class="text-center py-16 bg-white rounded-xl border border-dashed border-slate-300"><i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-4"></i><p class="text-slate-500 font-medium text-lg">No hay Órdenes de Compra cargadas.</p></div>`;
                 actualizarStats(0, 0, 0, 0); return;
             }
 
             ordenesData.forEach(rawOc => {
                 const oc = calcularSaldos(rawOc);
-                globalAdjudicado += oc.totales.totalOC; globalEntregado += oc.totales.totalEntregadoPlata; 
-                globalPendiente += oc.totales.totalPendientePlata; globalFacturado += oc.totales.totalFacturado;
+                globalAdjudicado += oc.totales.totalOC; globalEntregado += oc.totales.totalEntregadoPlata; globalPendiente += oc.totales.totalPendientePlata; globalFacturado += oc.totales.totalFacturado;
 
                 if (searchTerms && !oc.numero_oc.toLowerCase().includes(searchTerms) && !oc.descripcion.toLowerCase().includes(searchTerms) && !(oc.numero_proceso && oc.numero_proceso.toLowerCase().includes(searchTerms))) return;
 
@@ -987,6 +958,7 @@
                     rowsHtml += `
                         <tr class="hover:bg-slate-50 transition border-b border-slate-100 last:border-0">
                             <td class="px-4 py-3 text-sm text-center text-slate-800 font-bold bg-slate-100">${p.renglon || '-'}</td>
+                            <td class="px-4 py-3 text-[10px] text-center text-slate-400 font-mono">${p.codigo_item || '-'}</td>
                             <td class="px-4 py-3 text-sm text-slate-800 font-medium" title="${p.nombre}">${p.nombre.length > 50 ? p.nombre.substring(0, 50) + '...' : p.nombre}</td>
                             <td class="px-4 py-3 text-sm text-center text-slate-500">${p.cantidad_total}</td>
                             <td class="px-4 py-3 text-sm text-center font-semibold text-slate-700 bg-slate-50">${formatMoney(p.total_monto)}</td>
@@ -1032,6 +1004,7 @@
                                         <thead class="bg-slate-100">
                                             <tr>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-slate-600 uppercase">Reng.</th>
+                                                <th class="px-4 py-3 text-center text-[10px] font-bold text-slate-400 uppercase">Cód.</th>
                                                 <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase">Producto</th>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-slate-600 uppercase">Cant. Total</th>
                                                 <th class="px-4 py-3 text-center text-xs font-bold text-slate-800 uppercase bg-slate-200">Monto Total</th>
@@ -1110,11 +1083,16 @@
                 const pendPedir = p.cantidad_total - p.cantidad_pedida_spr + cantEnEstaSPR;
                 
                 tbody.insertAdjacentHTML('beforeend', `<tr>
-                    <td class="px-4 py-3 text-sm text-center font-bold bg-slate-50 border-r border-slate-200">${p.renglon || '-'}</td>
-                    <td class="px-4 py-3 text-sm text-slate-800" title="${p.nombre}">${p.nombre.length > 60 ? p.nombre.substring(0, 60) + '...' : p.nombre}</td>
+                    <td class="px-4 py-3 text-sm text-slate-800" title="${p.nombre}">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold bg-slate-200 px-1.5 py-0.5 rounded">${p.renglon || '-'}</span>
+                            <span class="text-[10px] text-slate-400 font-mono">${p.codigo_item || ''}</span>
+                        </div>
+                        <div class="mt-1">${p.nombre.length > 50 ? p.nombre.substring(0, 50) + '...' : p.nombre}</div>
+                    </td>
                     <td class="px-4 py-3 text-sm text-right font-medium">${p.cantidad_total}</td>
                     <td class="px-4 py-3 text-sm text-right text-blue-600 font-bold">${pendPedir}</td>
-                    <td class="px-4 py-2 text-right"><input type="text" min="0" data-prod-id="${p.id_prod}" data-renglon="${p.renglon}" value="${cantEnEstaSPR || ''}" class="spr-input-cant w-24 border border-slate-300 rounded px-2 py-1 text-sm text-right focus:ring-1 focus:ring-blue-500 outline-none transition-colors" placeholder="0"></td>
+                    <td class="px-4 py-2 text-right"><input type="text" min="0" data-prod-id="${p.id_prod}" data-renglon="${p.renglon}" data-codigo="${p.codigo_item}" value="${cantEnEstaSPR || ''}" class="spr-input-cant w-24 border border-slate-300 rounded px-2 py-1 text-sm text-right focus:ring-1 focus:ring-blue-500 outline-none transition-colors" placeholder="0"></td>
                 </tr>`);
             });
             openModal('modal-nueva-spr');
